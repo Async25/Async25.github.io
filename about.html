@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>page-Async25</title>
+    <title>关于 | Async25</title>
     <style>
         :root {
             --text: #ffffff;
@@ -13,7 +13,6 @@
 
         * { margin:0; padding:0; box-sizing:border-box; }
 
-        /* ===== 背景图 + 50%黑色遮罩 ===== */
         body {
             font-family: "Segoe UI", Arial, sans-serif;
             background: url("background.jpg") no-repeat center center fixed;
@@ -36,7 +35,6 @@
             pointer-events: none;
         }
 
-        /* ===== 三栏布局 ===== */
         .layout {
             position: relative;
             z-index: 1;
@@ -50,7 +48,6 @@
             align-items: start;
         }
 
-        /* 左侧边栏 */
         .sidebar {
             position: sticky;
             top: 20px;
@@ -124,75 +121,6 @@
         }
         .links a i { font-size: 16px; }
 
-        /* 中间新闻栏 */
-        .feed {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding: 10px 0 40px;
-        }
-
-        .news-item {
-            position: relative;
-            padding: 22px 28px;
-            cursor: pointer;
-            transition: all 0.25s;
-            border-left: 3px solid transparent;
-            border-radius: 0 16px 16px 0;
-        }
-        .news-item::before {
-            content: "";
-            position: absolute;
-            left: 8px;
-            top: 28px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.25);
-            transition: all 0.25s;
-        }
-        .news-item:hover,
-        .news-item.active {
-            background: rgba(255, 255, 255, 0.05);
-            border-left-color: var(--accent);
-        }
-        .news-item:hover::before,
-        .news-item.active::before {
-            background: var(--accent);
-            box-shadow: 0 0 10px rgba(107, 223, 255, 0.6);
-        }
-        .news-item:hover {
-            transform: translateX(4px);
-        }
-        .news-item .news-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 6px;
-            padding-left: 18px;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
-            transition: color 0.25s;
-        }
-        .news-item:hover .news-title,
-        .news-item.active .news-title {
-            color: var(--accent);
-        }
-        .news-item .news-summary {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            padding-left: 18px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-        }
-        .news-item .news-meta {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.45);
-            margin-top: 10px;
-            padding-left: 18px;
-            letter-spacing: 0.5px;
-        }
-
-        /* 中间内容占位页 */
         .page-content {
             padding: 32px 36px;
             border-radius: 20px;
@@ -228,7 +156,6 @@
             transform: translateX(-4px);
         }
 
-        /* 右侧预留区 */
         .aside-right {
             position: sticky;
             top: 20px;
@@ -263,7 +190,6 @@
             }
         }
 
-        /* ===== 左侧音乐组件 ===== */
         .music-widget {
             margin: 0 18px 24px;
             padding: 18px;
@@ -442,7 +368,6 @@
             border: none;
         }
     </style>
-    <!-- 图标库（可选） -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
@@ -502,42 +427,11 @@
         </div>
     </aside>
 
-    <section class="feed" id="feed">
-        <a class="news-item active" href="index.html">
-            <div class="news-title">首页</div>
-            <div class="news-summary">站点入口与栏目导航。</div>
-            <div class="news-meta">置顶 · 站点导览</div>
-        </a>
-
-        <a class="news-item" href="projects.html">
-            <div class="news-title">项目记录</div>
-            <div class="news-summary">STM32、步进电机、TMC2209、串口上位机等开发笔记。</div>
-            <div class="news-meta">嵌入式 · 控制算法</div>
-        </a>
-
-        <a class="news-item" href="blog.html">
-            <div class="news-title">随笔</div>
-            <div class="news-summary">电子学习、调试心态、RM 经历与技术分享。</div>
-            <div class="news-meta">生活 · 学习</div>
-        </a>
-
-        <a class="news-item" href="gallery.html">
-            <div class="news-title">图集</div>
-            <div class="news-summary">PCB、示波器波形、桌面布置与比赛现场照片。</div>
-            <div class="news-meta">图片 · 展示</div>
-        </a>
-
-        <a class="news-item" href="links.html">
-            <div class="news-title">友链</div>
-            <div class="news-summary">朋友们的个人主页与常用资源聚合。</div>
-            <div class="news-meta">社交 · 收藏</div>
-        </a>
-
-        <a class="news-item" href="about.html">
-            <div class="news-title">关于</div>
-            <div class="news-summary">更详细的自我介绍、技能栈、联系方式与本站历程。</div>
-            <div class="news-meta">关于 · 联系</div>
-        </a>
+    <section class="page-content">
+        <h2>关于</h2>
+        <p>这里将展示更详细的自我介绍、技能栈、联系方式以及本站的建设历程。</p>
+        <p>目前为占位页面，后续可补充个人经历、技术标签、时间线与联系表单。</p>
+        <a class="back-link" href="index.html"><i class="fas fa-arrow-left"></i> 返回首页</a>
     </section>
 
     <aside class="aside-right"></aside>
