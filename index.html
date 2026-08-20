@@ -3,98 +3,407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>张三的个人主页</title>
+    <title>Here, Async25</title>
     <style>
         :root {
-            --bg: #f8f9fa;
-            --text: #2c3e50;
-            --card: #ffffff;
-            --accent: #ff6b6b;   /* 主色调，喜欢可换成 #e91e63、#4ecdc4 等 */
-        }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg: #121212;
-                --text: #e0e0e0;
-                --card: #1e1e1e;
-            }
+            --text: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --accent: #6bdfff;
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
+
+        /* ===== 背景图 + 50%黑色遮罩 ===== */
         body {
             font-family: "Segoe UI", Arial, sans-serif;
-            background: var(--bg);
+            background: url("background.jpg") no-repeat center center fixed;
+            background-size: cover;
+            -webkit-background-size: cover;
             color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
             padding: 20px;
+            position: relative;
         }
-        .card {
-            background: var(--card);
-            max-width: 420px;
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ===== 三栏布局 ===== */
+        .layout {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 320px 1fr 240px;
+            gap: 24px;
             width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex: 1;
+            align-items: start;
+        }
+
+        /* 左侧边栏 */
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
             border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             text-align: center;
             transition: transform 0.3s;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(107, 223, 255, 0.3) transparent;
         }
-        .card:hover { transform: translateY(-10px); }
+        .sidebar::-webkit-scrollbar { width: 5px; }
+        .sidebar::-webkit-scrollbar-track { background: transparent; }
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(107, 223, 255, 0.3);
+            border-radius: 3px;
+        }
+        .sidebar:hover { transform: translateY(-6px); }
 
         .avatar {
-            width: 120px;
-            height: 120px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
-            margin: 30px auto 10px;
+            margin: 28px auto 10px;
             object-fit: cover;
-            border: 5px solid var(--accent);
+            border: 4px solid var(--accent);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
         }
         h1 {
-            font-size: 28px;
+            font-size: 24px;
             margin: 10px 0;
             color: var(--accent);
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
         .tagline {
-            color: #888;
-            font-size: 16px;
-            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 18px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
         }
         .bio {
-            padding: 0 30px;
-            margin-bottom: 25px;
-            font-size: 15px;
+            padding: 0 24px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
         }
         .links {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 12px;
-            padding: 0 20px 30px;
+            gap: 10px;
+            padding: 0 18px 28px;
         }
         .links a {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
+            gap: 6px;
+            padding: 8px 16px;
             background: var(--accent);
             color: white;
             text-decoration: none;
             border-radius: 50px;
-            font-size: 14px;
+            font-size: 13px;
             transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
         .links a:hover {
             transform: scale(1.08);
-            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+            box-shadow: 0 6px 20px rgba(107, 223, 255, 0.35);
         }
-        .links a i { font-size: 18px; }
+        .links a i { font-size: 16px; }
+
+        /* 中间新闻栏 */
+        .feed {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding: 10px 0 40px;
+        }
+
+        .news-item {
+            position: relative;
+            padding: 22px 28px;
+            cursor: pointer;
+            transition: all 0.25s;
+            border-left: 3px solid transparent;
+            border-radius: 0 16px 16px 0;
+        }
+        .news-item::before {
+            content: "";
+            position: absolute;
+            left: 8px;
+            top: 28px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            transition: all 0.25s;
+        }
+        .news-item:hover,
+        .news-item.active {
+            background: rgba(255, 255, 255, 0.05);
+            border-left-color: var(--accent);
+        }
+        .news-item:hover::before,
+        .news-item.active::before {
+            background: var(--accent);
+            box-shadow: 0 0 10px rgba(107, 223, 255, 0.6);
+        }
+        .news-item:hover {
+            transform: translateX(4px);
+        }
+        .news-item .news-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 6px;
+            padding-left: 18px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+            transition: color 0.25s;
+        }
+        .news-item:hover .news-title,
+        .news-item.active .news-title {
+            color: var(--accent);
+        }
+        .news-item .news-summary {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            padding-left: 18px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+        .news-item .news-meta {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.45);
+            margin-top: 10px;
+            padding-left: 18px;
+            letter-spacing: 0.5px;
+        }
+
+        /* 右侧预留区 */
+        .aside-right {
+            position: sticky;
+            top: 20px;
+            min-height: 120px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+        }
 
         footer {
-            margin-top: 40px;
-            font-size: 14px;
-            color: #aaa;
+            position: relative;
+            z-index: 1;
+            margin-top: 24px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        }
+
+        @media (max-width: 1100px) {
+            .layout {
+                grid-template-columns: 280px 1fr;
+            }
+            .aside-right { display: none; }
+        }
+        @media (max-width: 760px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+            .sidebar {
+                position: static;
+            }
+        }
+
+        /* ===== 左侧音乐组件 ===== */
+        .music-widget {
+            margin: 0 18px 24px;
+            padding: 18px;
+            border-radius: 18px;
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            text-align: left;
+            transition: all 0.3s;
+        }
+        .music-widget:hover {
+            border-color: rgba(107, 223, 255, 0.35);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        }
+        .music-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .music-cover {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, rgba(107,223,255,0.35), rgba(107,223,255,0.08));
+            border: 1px solid rgba(107, 223, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: var(--accent);
+            flex-shrink: 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .music-cover::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 60%);
+        }
+        .playing .music-cover i {
+            animation: musicPulse 1.2s ease-in-out infinite;
+        }
+        @keyframes musicPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.75; }
+        }
+        .music-info {
+            min-width: 0;
+        }
+        .music-label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+            margin-bottom: 2px;
+        }
+        .music-title {
+            font-size: 13px;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 170px;
+        }
+        .music-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+        .music-controls .main-btns {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .music-controls button {
+            border: none;
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s;
+            border-radius: 50%;
+        }
+        .music-controls button:hover {
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+        .music-controls .btn-toggle {
+            width: 42px;
+            height: 42px;
+            background: var(--accent);
+            color: white;
+            font-size: 16px;
+            box-shadow: 0 4px 14px rgba(107, 223, 255, 0.35);
+        }
+        .music-controls .btn-toggle:hover {
+            background: #8ae8ff;
+            color: white;
+            transform: scale(1.08);
+        }
+        .music-controls .btn-sm {
+            width: 32px;
+            height: 32px;
+            font-size: 13px;
+            color: rgba(255,255,255,0.85);
+        }
+        .music-progress {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255,255,255,0.15);
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width 0.2s linear;
+            box-shadow: 0 0 8px rgba(107, 223, 255, 0.5);
+        }
+        .music-time {
+            font-size: 10px;
+            color: rgba(255,255,255,0.5);
+            font-variant-numeric: tabular-nums;
+        }
+        .music-vol {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .music-vol i {
+            font-size: 12px;
+            color: rgba(255,255,255,0.6);
+            width: 14px;
+            text-align: center;
+        }
+        input[type=range].vol-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            flex: 1;
+            height: 4px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+        input[type=range].vol-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 6px rgba(107, 223, 255, 0.6);
+            cursor: pointer;
+        }
+        input[type=range].vol-slider::-moz-range-thumb {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 6px rgba(107, 223, 255, 0.6);
+            cursor: pointer;
+            border: none;
         }
     </style>
     <!-- 图标库（可选） -->
@@ -102,43 +411,249 @@
 </head>
 <body>
 
-<div class="card">
-    <!-- 1. 替换成你的头像（放同目录下或用网络链接） -->
-    <img src="https://avatars.githubusercontent.com/u/你的githubid?v=4" alt="头像" class="avatar">
-    <!-- 或者本地图片：src="myphoto.jpg" -->
+<main class="layout">
+    <aside class="sidebar">
+        <img src="121482807.jpg" alt="头像" class="avatar">
 
-    <h1>张三</h1>
-    <p class="tagline">前端开发者 / 摄影爱好者 / 正在努力变厉害的人</p>
+        <h1>Here , as Async25</h1>
+        <p class="tagline">低端开发者 / 嵌入式学徒 / RMer(?</p>
 
-    <div class="bio">
-        Hi～我是张三，目前在广州做前端，喜欢写代码、拍风景、撸猫。<br>
-        生活很普通，但希望每天都能进步一点点
-    </div>
+        <div class="bio">
+            这里是Async25，电子系学生<br>
+            Relax，nothing is in control
+        </div>
 
-    <div class="links">
-        <!-- 直接改链接和图标就行 -->
-        <a href="https://github.com/yourname" target="_blank">
-            <i class="fab fa-github"></i> GitHub
-        </a>
-        <a href="https://weibo.com/yourname" target="_blank">
-            <i class="fab fa-weibo"></i> 微博
-        </a>
-        <a href="https://space.bilibili.com/123456" target="_blank">
-            <i class="fab fa-bilibili"></i> B站
-        </a>
-        <a href="mailto:your@email.com">
-            <i class="fas fa-envelope"></i> 邮件
-        </a>
-        <a href="https://yourblog.com" target="_blank">
-            <i class="fas fa-blog"></i> 博客
-        </a>
-        <a href="https://juejin.cn/user/你的id" target="_blank">
-            <i class="fab fa-juejin"></i> 掘金
-        </a>
-    </div>
-</div>
+        <div class="links">
+            <a href="https://github.com/Async25" target="_blank">
+                <i class="fab fa-github"></i> GitHub
+            </a>
+            <a href="https://space.bilibili.com/2141027128" target="_blank">
+                <i class="fab fa-bilibili"></i> B站
+            </a>
+            <a href="https://t.me/SanyueQi" target="_blank">
+                <i class="fab fa-telegram"></i> TG
+            </a>
+            <a href="mailto:gusaa@gmail.com">
+                <i class="fas fa-envelope"></i> 邮件
+            </a>
+        </div>
 
-<footer>© 2025 张三 | 手工码的个人主页</footer>
+        <div class="music-widget" id="music-widget">
+            <div class="music-header">
+                <div class="music-cover"><i class="fas fa-music"></i></div>
+                <div class="music-info">
+                    <div class="music-label">正在播放</div>
+                    <div class="music-title" id="music-title">点击播放</div>
+                </div>
+            </div>
+            <div class="music-controls">
+                <div class="main-btns">
+                    <button class="btn-sm" id="music-prev" title="上一首"><i class="fas fa-backward"></i></button>
+                    <button class="btn-toggle" id="music-toggle" title="播放 / 暂停"><i class="fas fa-play"></i></button>
+                    <button class="btn-sm" id="music-next" title="下一首"><i class="fas fa-forward"></i></button>
+                </div>
+                <button class="btn-sm" id="music-mode" title="随机播放"><i class="fas fa-shuffle"></i></button>
+            </div>
+            <div class="music-progress">
+                <span class="music-time" id="current-time">0:00</span>
+                <div class="progress-bar" id="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+                <span class="music-time" id="duration">0:00</span>
+            </div>
+            <div class="music-vol">
+                <i class="fas fa-volume-high" id="vol-icon"></i>
+                <input type="range" class="vol-slider" id="vol-slider" min="0" max="1" step="0.01" value="0.7">
+            </div>
+        </div>
+    </aside>
+
+    <section class="feed" id="feed">
+        <article class="news-item" data-page="home">
+            <div class="news-title">首页</div>
+            <div class="news-summary">占位</div>
+            <div class="news-meta">置顶 · 站点导览</div>
+        </article>
+
+        <article class="news-item" data-page="projects">
+            <div class="news-title">项目记录</div>
+            <div class="news-summary">占位</div>
+            <div class="news-meta">嵌入式 · 控制算法</div>
+        </article>
+
+        <article class="news-item" data-page="blog">
+            <div class="news-title">随笔</div>
+            <div class="news-summary">占位</div>
+            <div class="news-meta">生活 · 学习</div>
+        </article>
+
+        <article class="news-item" data-page="gallery">
+            <div class="news-title">图集</div>
+            <div class="news-summary">占位</div>
+            <div class="news-meta">图片 · 展示</div>
+        </article>
+
+        <article class="news-item" data-page="links">
+            <div class="news-title">友链</div>
+            <div class="news-summary">占位</div>
+            <div class="news-meta">社交 · 收藏</div>
+        </article>
+
+        <article class="news-item" data-page="about">
+            <div class="news-title">关于</div>
+            <div class="news-summary">占位</div>
+            <div class="news-meta">关于 · 联系</div>
+        </article>
+    </section>
+
+    <aside class="aside-right"></aside>
+</main>
+
+<footer>© 2026 Async | </footer>
+
+<script>
+(function () {
+    var playlist = ["Dmi.mp3", "Wxiang.mp3", "Bxu.mp3", "Zdu.mp3", "Sque.mp3", "Dmi(Vo).mp3"];
+    var audio = new Audio();
+    audio.volume = 0.7;
+    var queue = [];
+    var qi = 0;
+    var history = [];
+    var playing = false;
+
+    var widget = document.getElementById("music-widget");
+    var titleEl = document.getElementById("music-title");
+    var toggleBtn = document.getElementById("music-toggle");
+    var toggleIcon = toggleBtn.querySelector("i");
+    var volSlider = document.getElementById("vol-slider");
+    var volIcon  = document.getElementById("vol-icon");
+    var progressBar = document.getElementById("progress-bar");
+    var progressFill = document.getElementById("progress-fill");
+    var currentTimeEl = document.getElementById("current-time");
+    var durationEl = document.getElementById("duration");
+
+    function shuffle(arr) {
+        var r = arr.slice();
+        for (var i = r.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = r[i]; r[i] = r[j]; r[j] = t;
+        }
+        return r;
+    }
+
+    function baseName(src) {
+        return src.replace(/\.mp3$/i, "");
+    }
+
+    function formatTime(t) {
+        if (!isFinite(t)) return "0:00";
+        var m = Math.floor(t / 60);
+        var s = Math.floor(t % 60);
+        return m + ":" + (s < 10 ? "0" + s : s);
+    }
+
+    function updatePlayState(isPlaying) {
+        playing = isPlaying;
+        if (playing) {
+            widget.classList.add("playing");
+            toggleIcon.className = "fas fa-pause";
+        } else {
+            widget.classList.remove("playing");
+            toggleIcon.className = "fas fa-play";
+        }
+    }
+
+    function playSrc(src) {
+        audio.src = src;
+        audio.play().then(function () {
+            updatePlayState(true);
+            titleEl.textContent = baseName(src);
+        }).catch(function () {
+            updatePlayState(false);
+        });
+    }
+
+    function playNext() {
+        history.push(queue[qi - 1]);
+        if (qi >= queue.length) {
+            queue = shuffle(playlist);
+            qi = 0;
+        }
+        playSrc(queue[qi++]);
+    }
+
+    function playPrev() {
+        if (history.length > 0) {
+            var prev = history.pop();
+            playSrc(prev);
+        }
+    }
+
+    function updateVolIcon(v) {
+        volIcon.className = "fas " + (v === 0 ? "fa-volume-xmark" : v < 0.35 ? "fa-volume-low" : "fa-volume-high");
+    }
+
+    audio.addEventListener("ended", playNext);
+
+    audio.addEventListener("timeupdate", function () {
+        if (audio.duration) {
+            progressFill.style.width = (audio.currentTime / audio.duration * 100) + "%";
+        }
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+    });
+
+    audio.addEventListener("loadedmetadata", function () {
+        durationEl.textContent = formatTime(audio.duration);
+    });
+
+    toggleBtn.addEventListener("click", function () {
+        if (playing) {
+            audio.pause();
+            updatePlayState(false);
+        } else {
+            if (!audio.src) {
+                if (queue.length === 0) {
+                    queue = shuffle(playlist);
+                    qi = 0;
+                }
+                playSrc(queue[qi++]);
+            } else {
+                audio.play();
+                updatePlayState(true);
+            }
+        }
+    });
+
+    document.getElementById("music-next").addEventListener("click", playNext);
+    document.getElementById("music-prev").addEventListener("click", playPrev);
+
+    progressBar.addEventListener("click", function (e) {
+        if (!audio.duration) return;
+        var rect = progressBar.getBoundingClientRect();
+        var ratio = (e.clientX - rect.left) / rect.width;
+        audio.currentTime = ratio * audio.duration;
+    });
+
+    volSlider.addEventListener("input", function () {
+        var v = parseFloat(volSlider.value);
+        audio.volume = v;
+        updateVolIcon(v);
+    });
+})();
+</script>
+
+<script>
+(function () {
+    var items = document.querySelectorAll(".news-item");
+    items.forEach(function (item) {
+        item.addEventListener("click", function () {
+            items.forEach(function (i) { i.classList.remove("active"); });
+            item.classList.add("active");
+            var page = item.getAttribute("data-page");
+            console.log("切换栏目：" + page);
+            // 预留：在此处根据 page 值切换中间或右侧内容
+        });
+    });
+})();
+</script>
 
 </body>
 </html>
