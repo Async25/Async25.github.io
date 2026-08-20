@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>张三的个人主页</title>
+    <style>
+        :root {
+            --bg: #f8f9fa;
+            --text: #2c3e50;
+            --card: #ffffff;
+            --accent: #ff6b6b;   /* 主色调，喜欢可换成 #e91e63、#4ecdc4 等 */
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #121212;
+                --text: #e0e0e0;
+                --card: #1e1e1e;
+            }
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .card {
+            background: var(--card);
+            max-width: 420px;
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-10px); }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 30px auto 10px;
+            object-fit: cover;
+            border: 5px solid var(--accent);
+        }
+        h1 {
+            font-size: 28px;
+            margin: 10px 0;
+            color: var(--accent);
+        }
+        .tagline {
+            color: #888;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        .bio {
+            padding: 0 30px;
+            margin-bottom: 25px;
+            font-size: 15px;
+        }
+        .links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            padding: 0 20px 30px;
+        }
+        .links a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .links a:hover {
+            transform: scale(1.08);
+            box-shadow: 0 5px 15px rgba(255,107,107,0.4);
+        }
+        .links a i { font-size: 18px; }
+
+        footer {
+            margin-top: 40px;
+            font-size: 14px;
+            color: #aaa;
+        }
+    </style>
+    <!-- 图标库（可选） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+
+<div class="card">
+    <!-- 1. 替换成你的头像（放同目录下或用网络链接） -->
+    <img src="https://avatars.githubusercontent.com/u/你的githubid?v=4" alt="头像" class="avatar">
+    <!-- 或者本地图片：src="myphoto.jpg" -->
+
+    <h1>张三</h1>
+    <p class="tagline">前端开发者 / 摄影爱好者 / 正在努力变厉害的人</p>
+
+    <div class="bio">
+        Hi～我是张三，目前在广州做前端，喜欢写代码、拍风景、撸猫。<br>
+        生活很普通，但希望每天都能进步一点点
+    </div>
+
+    <div class="links">
+        <!-- 直接改链接和图标就行 -->
+        <a href="https://github.com/yourname" target="_blank">
+            <i class="fab fa-github"></i> GitHub
+        </a>
+        <a href="https://weibo.com/yourname" target="_blank">
+            <i class="fab fa-weibo"></i> 微博
+        </a>
+        <a href="https://space.bilibili.com/123456" target="_blank">
+            <i class="fab fa-bilibili"></i> B站
+        </a>
+        <a href="mailto:your@email.com">
+            <i class="fas fa-envelope"></i> 邮件
+        </a>
+        <a href="https://yourblog.com" target="_blank">
+            <i class="fas fa-blog"></i> 博客
+        </a>
+        <a href="https://juejin.cn/user/你的id" target="_blank">
+            <i class="fab fa-juejin"></i> 掘金
+        </a>
+    </div>
+</div>
+
+<footer>© 2025 张三 | 手工码的个人主页</footer>
+
+</body>
+</html>
