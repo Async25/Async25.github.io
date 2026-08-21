@@ -68,8 +68,6 @@
             background: rgba(107, 223, 255, 0.3);
             border-radius: 3px;
         }
-        .sidebar:hover { transform: translateY(-6px); }
-
         .avatar {
             width: 110px;
             height: 110px;
@@ -124,7 +122,7 @@
         }
         .links a i { font-size: 16px; }
 
-        /* 中间新闻栏 */
+        /* 中间栏 */
         .feed {
             display: flex;
             flex-direction: column;
@@ -133,12 +131,14 @@
         }
 
         .news-item {
+            display: block;
             position: relative;
             padding: 22px 28px;
             cursor: pointer;
             transition: all 0.25s;
             border-left: 3px solid transparent;
             border-radius: 0 16px 16px 0;
+            text-decoration: none;
         }
         .news-item::before {
             content: "";
@@ -503,41 +503,43 @@
     </aside>
 
     <section class="feed" id="feed">
-        <a class="news-item active" href="index.html">
-            <div class="news-title">首页</div>
-            <div class="news-summary">站点入口与栏目导航。</div>
-            <div class="news-meta">置顶 · 站点导览</div>
-        </a>
+        <div id="feed-list">
+            <a class="news-item" href="#" data-page="projects">
+                <div class="news-title">项目记录</div>
+                <div class="news-summary">STM32、步进电机、TMC2209、串口上位机等开发笔记。</div>
+                <div class="news-meta">嵌入式 · 控制算法</div>
+            </a>
 
-        <a class="news-item" href="projects.html">
-            <div class="news-title">项目记录</div>
-            <div class="news-summary">STM32、步进电机、TMC2209、串口上位机等开发笔记。</div>
-            <div class="news-meta">嵌入式 · 控制算法</div>
-        </a>
+            <a class="news-item" href="#" data-page="blog">
+                <div class="news-title">随笔</div>
+                <div class="news-summary">电子学习、调试心态、RM 经历与技术分享。</div>
+                <div class="news-meta">生活 · 学习</div>
+            </a>
 
-        <a class="news-item" href="blog.html">
-            <div class="news-title">随笔</div>
-            <div class="news-summary">电子学习、调试心态、RM 经历与技术分享。</div>
-            <div class="news-meta">生活 · 学习</div>
-        </a>
+            <a class="news-item" href="#" data-page="gallery">
+                <div class="news-title">图集</div>
+                <div class="news-summary">PCB、示波器波形、桌面布置与比赛现场照片。</div>
+                <div class="news-meta">图片 · 展示</div>
+            </a>
 
-        <a class="news-item" href="gallery.html">
-            <div class="news-title">图集</div>
-            <div class="news-summary">PCB、示波器波形、桌面布置与比赛现场照片。</div>
-            <div class="news-meta">图片 · 展示</div>
-        </a>
+            <a class="news-item" href="#" data-page="links">
+                <div class="news-title">友链</div>
+                <div class="news-summary">朋友们的个人主页与常用资源聚合。</div>
+                <div class="news-meta">社交 · 收藏</div>
+            </a>
 
-        <a class="news-item" href="links.html">
-            <div class="news-title">友链</div>
-            <div class="news-summary">朋友们的个人主页与常用资源聚合。</div>
-            <div class="news-meta">社交 · 收藏</div>
-        </a>
+            <a class="news-item" href="#" data-page="about">
+                <div class="news-title">关于</div>
+                <div class="news-summary">更详细的自我介绍、技能栈、联系方式与本站历程。</div>
+                <div class="news-meta">关于 · 联系</div>
+            </a>
+        </div>
 
-        <a class="news-item" href="about.html">
-            <div class="news-title">关于</div>
-            <div class="news-summary">更详细的自我介绍、技能栈、联系方式与本站历程。</div>
-            <div class="news-meta">关于 · 联系</div>
-        </a>
+        <section class="page-content" id="page-view" style="display: none;">
+            <h2 id="page-title"></h2>
+            <div id="page-body"></div>
+            <a class="back-link" href="#" id="back-home"><i class="fas fa-arrow-left"></i> 返回首页</a>
+        </section>
     </section>
 
     <aside class="aside-right"></aside>
@@ -547,7 +549,14 @@
 
 <script>
 (function () {
-    var playlist = ["DAMIDAMI(伴奏).mp3", "妄想色心跳.mp3", "不虚此行.mp3", "再度和你.mp3", "山雀.mp3", "DAMIDAMI.mp3"];
+    var playlist = [
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/DAMIDAMI(%E4%BC%B4%E5%A5%8F).mp3",
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%A6%84%E6%83%B3%E8%89%B2%E5%BF%83%E8%B7%B3.mp3",
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E4%B8%8D%E8%99%9A%E6%AD%A4%E8%A1%8C.mp3",
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%86%8D%E5%BA%A6%E5%92%8C%E4%BD%A0.mp3",
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%B1%B1%E9%9B%80.mp3",
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/DAMIDAMI.mp3"
+    ];
     var audio = new Audio();
     audio.volume = 0.7;
     var queue = [];
@@ -672,6 +681,44 @@
         var v = parseFloat(volSlider.value);
         audio.volume = v;
         updateVolIcon(v);
+    });
+})();
+</script>
+
+<script>
+(function () {
+    var feedList = document.getElementById("feed-list");
+    var pageView = document.getElementById("page-view");
+    var pageTitle = document.getElementById("page-title");
+    var pageBody = document.getElementById("page-body");
+    var backHome = document.getElementById("back-home");
+    var items = document.querySelectorAll(".news-item");
+
+    function showHome() {
+        pageView.style.display = "none";
+        feedList.style.display = "block";
+        items.forEach(function (item) { item.classList.remove("active"); });
+        document.title = "page-Async25";
+    }
+
+    function showPage(title) {
+        feedList.style.display = "none";
+        pageTitle.textContent = title;
+        pageBody.innerHTML = "";
+        pageView.style.display = "block";
+        document.title = title + " | Async25";
+    }
+
+    items.forEach(function (item) {
+        item.addEventListener("click", function (e) {
+            e.preventDefault();
+            showPage(item.querySelector(".news-title").textContent);
+        });
+    });
+
+    backHome.addEventListener("click", function (e) {
+        e.preventDefault();
+        showHome();
     });
 })();
 </script>
