@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>page-Async25</title>
+    <title>泥嚎,我是Async25</title>
     <style>
         :root {
             --text: #ffffff;
@@ -550,12 +550,12 @@
 <script>
 (function () {
     var playlist = [
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/DAMIDAMI(%E4%BC%B4%E5%A5%8F).mp3",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%A6%84%E6%83%B3%E8%89%B2%E5%BF%83%E8%B7%B3.mp3",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E4%B8%8D%E8%99%9A%E6%AD%A4%E8%A1%8C.mp3",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%86%8D%E5%BA%A6%E5%92%8C%E4%BD%A0.mp3",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%B1%B1%E9%9B%80.mp3",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/DAMIDAMI.mp3"
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/DAMIDAMI(%E4%BC%B4%E5%A5%8F).m4a",
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%A6%84%E6%83%B3%E8%89%B2%E5%BF%83%E8%B7%B3.m4a",
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E4%B8%8D%E8%99%9A%E6%AD%A4%E8%A1%8C.m4a",
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%86%8D%E5%BA%A6%E5%92%8C%E4%BD%A0.m4a",
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%B1%B1%E9%9B%80.m4a",
+        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/DAMIDAMI.m4a"
     ];
     var audio = new Audio();
     audio.volume = 0.7;
@@ -585,7 +585,14 @@
     }
 
     function baseName(src) {
-        return src.replace(/\.mp3$/i, "");
+        try {
+            var url = new URL(src);
+            var name = url.pathname.split('/').pop();
+            name = decodeURIComponent(name);
+            return name.replace(/\.m4a$/i, "");
+        } catch (e) {
+            return src.replace(/\.m4a$/i, "");
+        }
     }
 
     function formatTime(t) {

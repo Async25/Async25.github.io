@@ -1,0 +1,8 @@
+[0822/201452.332:INFO:network_monitor.cc(54)] [NetworkMonitor] Started
+[0822/201516.343:INFO:network_monitor_win.cc(71)] [NetMon] Stop begin
+[0822/201516.343:INFO:network_monitor_win.cc(79)] [NetMon] Joining worker thread...
+[0822/201516.344:INFO:network_monitor_win.cc(81)] [NetMon] Worker thread joined
+[0822/201516.344:INFO:network_monitor_win.cc(99)] [NetMon] Stop done
+[0822/201516.344:INFO:network_monitor_win.cc(71)] [NetMon] Stop begin
+[0822/201516.344:INFO:network_monitor_win.cc(99)] [NetMon] Stop done
+[0822/201516.344:INFO:network_monitor.cc(74)] [NetworkMonitor] Stopped
