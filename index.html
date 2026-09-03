@@ -227,6 +227,12 @@
             color: #8ae8ff;
             transform: translateX(-4px);
         }
+        .page-content h3 {
+            font-size: 20px;
+            color: var(--text);
+            margin-bottom: 10px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
 
         /* 右侧预留区 */
         .aside-right {
@@ -236,6 +242,19 @@
             border-radius: 20px;
             background: rgba(255, 255, 255, 0.04);
             border: 1px dashed rgba(255, 255, 255, 0.12);
+            overflow: hidden;
+        }
+        .aside-right p {
+            padding: 20px;
+            font-size: 14px;
+            color: var(--text);
+            line-height: 1.6;
+        }
+        .aside-right img {
+            display: block;
+            width: calc(100% - 40px);
+            margin: 0 20px 20px;
+            border-radius: 12px;
         }
 
         footer {
@@ -469,7 +488,7 @@
             <a href="https://t.me/SanyueQi" target="_blank">
                 <i class="fab fa-telegram"></i> TG
             </a>
-            <a href="mailto:gusaa@gmail.com">
+            <a href="mailto:gusaa187@gmail.com">
                 <i class="fas fa-envelope"></i> 邮件
             </a>
         </div>
@@ -506,7 +525,7 @@
         <div id="feed-list">
             <a class="news-item" href="#" data-page="projects">
                 <div class="news-title">技术栈</div>
-                <div class="news-summary">个人掌握的技能，以及studying的兴趣方向</div>
+                <div class="news-summary">个人掌握的技能，以及正在学习的兴趣方向</div>
                 <div class="news-meta">学习 · 算法</div>
             </a>
 
@@ -518,34 +537,38 @@
 
             <a class="news-item" href="#" data-page="gallery">
                 <div class="news-title">图集</div>
-                <div class="news-summary">占位</div>
+                <div class="news-summary">暂无内容</div>
                 <div class="news-meta">图片 · 展示</div>
             </a>
 
             <a class="news-item" href="#" data-page="links">
                 <div class="news-title">友链</div>
-                <div class="news-summary">占位</div>
+                <div class="news-summary">暂无内容</div>
                 <div class="news-meta">社交 · 收藏</div>
             </a>
 
             <a class="news-item" href="#" data-page="about">
                 <div class="news-title">关于</div>
-                <div class="news-summary">占位</div>
+                <div class="news-summary">暂无内容</div>
                 <div class="news-meta">关于 · 历史</div>
             </a>
         </div>
 
         <section class="page-content" id="page-view" style="display: none;">
             <h2 id="page-title"></h2>
+            <h3 id="page-subtitle"></h3>
             <div id="page-body"></div>
             <a class="back-link" href="#" id="back-home"><i class="fas fa-arrow-left"></i> 返回首页</a>
         </section>
     </section>
 
-    <aside class="aside-right"></aside>
+    <aside class="aside-right">
+        <p>有人夸我的水平追上GPT时belike:</p>
+        <img src="https://bee-reg-ab.imagency.cn/mr/5075/26/cd55e0e3c1dab921c6584d59d182d776.png" alt="123456">
+    </aside>
 </main>
 
-<footer>© 2026 Async25 | 能工智人制作 | V0.2</footer>
+<footer>© 2026 Async25 | 能工智人制作 | V0.3</footer>
 
 <script>
 (function () {
@@ -704,9 +727,34 @@
     var feedList = document.getElementById("feed-list");
     var pageView = document.getElementById("page-view");
     var pageTitle = document.getElementById("page-title");
+    var pageSubtitle = document.getElementById("page-subtitle");
     var pageBody = document.getElementById("page-body");
     var backHome = document.getElementById("back-home");
     var items = document.querySelectorAll(".news-item");
+
+    var pages = {
+        projects: [{ title: "先更新完项目部分", body: ["123456", "123456", "123456"] },
+                   { title: "23456", body: ["123456", "123456", "123456"] }],
+        blog:     [{ title: "车载平衡滚球运动控制系统 (2026全国大学生电子设计竞赛 H题) 参赛项目", 
+                    body: ["负责部分: PCB扩展板设计及全部软件工作(包括小车控制、滚球控制与视觉识别)", 
+                           "主要技术: 2层PCB设计，双环/串级PID，步进电机控制，大津法", 
+                           "详细介绍: 视觉主控采用瑞芯微RK3576，120fps-100万像素全局快门USB摄像头。通过固定曝光和大津法二值化处理 &emsp; &emsp; &emsp; &emsp;减少环境光干扰，利用动态ROI区域提升性能帧率，直接提取不与ROI边界粘连的最大连通区域作外接矩 &emsp; &emsp; &emsp; &emsp; &emsp;形，成功解决闭运算无法修复的钢球反光问题，同时保持极高性能与准确性。<br> &emsp; &emsp; &emsp; &emsp;小车主控为德州仪器MSPM0G3507，AT8236驱动两路编码器减速电机。通过权值法处理八路灰度传感器 &emsp; &emsp; &emsp; &emsp;获得连续误差值，通过“速度+误差”双环PID进行控制，题目循迹部分均获满分。<br> &emsp; &emsp; &emsp; &emsp;步进电机主控选用意法半导体STM32F407VET6，TMC2209开环驱动两相四线42步进电机。通过串口接收 &emsp; &emsp; &emsp; &emsp;上位机发送的实际水管倾角与钢球距目标偏差，使用串级PID计算目标水管倾角与电机转速设定。"]},
+                   { title: "简易自行瞄准装置 (2025全国大学生电子设计竞赛 E题) 赛后复刻", 
+                    body: ["负责部分: 全栈，包括云台结构设计，非标件3D建模和打印，PCB设计，控制程序，视觉算法", 
+                           "主要技术:", 
+                           "详细介绍:"] },
+                   {title: "RS485转Wi-Fi/4G双模工业边缘网关 企业项目",
+                    body: ["负责部分: 设备部分全栈，包括硬件选型，PCB设计，MQTT-云端服务器通信",
+                          "主要技术: 进行中",
+                          "详细介绍: 进行中"]
+            }],
+        gallery:  [{ title: "23456", body: ["123456", "123456", "123456"] },
+                   { title: "23456", body: ["123456", "123456", "123456"] }],
+        links:    [{ title: "23456", body: ["123456", "123456", "123456"] },
+                   { title: "23456", body: ["123456", "123456", "123456"] }],   
+        about:    [{ title: "23456", body: ["123456", "123456", "123456"] },
+                   { title: "23456", body: ["123456", "123456", "123456"] }]
+    };
 
     function showHome() {
         pageView.style.display = "none";
@@ -715,10 +763,20 @@
         document.title = "page-Async25";
     }
 
-    function showPage(title) {
+    function showPage(pageId) {
+        var item = document.querySelector('.news-item[data-page="' + pageId + '"]');
+        var title = item ? item.querySelector(".news-title").textContent : pageId;
+        var sections = pages[pageId] || [{ title: "123456", body: ["123456"] }];
+
         feedList.style.display = "none";
         pageTitle.textContent = title;
-        pageBody.innerHTML = "";
+
+        // 用 h3 输出每个小节标题，下面紧跟该小节的正文段落
+        pageBody.innerHTML = sections.map(function (sec) {
+            return "<h3>" + sec.title + "</h3>" +
+                sec.body.map(function (line) { return "<p>" + line + "</p>"; }).join("");
+        }).join("");
+
         pageView.style.display = "block";
         document.title = title + " | Async25";
     }
@@ -726,7 +784,7 @@
     items.forEach(function (item) {
         item.addEventListener("click", function (e) {
             e.preventDefault();
-            showPage(item.querySelector(".news-title").textContent);
+            showPage(item.getAttribute("data-page"));
         });
     });
 
