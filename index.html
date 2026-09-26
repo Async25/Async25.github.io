@@ -460,11 +460,163 @@
             cursor: pointer;
             border: none;
         }
+
+        /* ===== 黑白开场动画 ===== */
+        body.intro-active { overflow: hidden; }
+        .intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            overflow: hidden;
+            background: #fff;
+            color: #000;
+            isolation: isolate;
+            cursor: pointer;
+        }
+        .intro-screen::before,
+        .intro-screen::after {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            background: #000;
+            opacity: 0.08;
+        }
+        .intro-screen::before {
+            top: 0;
+            bottom: 0;
+            left: 12vw;
+            width: 1px;
+        }
+        .intro-screen::after {
+            left: 0;
+            right: 0;
+            top: 24vh;
+            height: 1px;
+        }
+        .intro-corner {
+            position: absolute;
+            top: 30px;
+            left: 20px;
+            font: 600 10px/1 "Courier New", monospace;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+        }
+        .intro-index {
+            position: absolute;
+            right: 20px;
+            bottom: 26px;
+            font: 600 10px/1 "Courier New", monospace;
+            letter-spacing: 0.2em;
+        }
+        .intro-mark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: min(70vw, 1180px);
+            transform: translate(-50%, -50%);
+        }
+        .intro-word {
+            display: block;
+            font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+            font-size: clamp(70px, 19vw, 270px);
+            font-weight: 500;
+            line-height: 0.78;
+            letter-spacing: 0.025em;
+            white-space: nowrap;
+        }
+        .intro-word-base { color: #000; }
+        .intro-word::after {
+            content: "";
+            display: inline-block;
+            width: 0.045em;
+            height: 0.72em;
+            margin-left: 0.16em;
+            vertical-align: -0.06em;
+            background: currentColor;
+            animation: intro-caret 1.2s steps(1, end) infinite;
+        }
+        .intro-sweep {
+            position: fixed;
+            z-index: 1;
+            inset: -8vh auto 0 0;
+            width: 0;
+            overflow: hidden;
+            background: #000;
+            animation: intro-sweep 5.0s cubic-bezier(0.77, 0, 0.18, 1) 0.95s forwards;
+        }
+        .intro-sweep .intro-word {
+            position: absolute;
+            top: 50%;
+            left: 50vw;
+            color: #fff;
+            width: min(86vw, 1500px);
+            transform: translate(-50%, -50%);
+        }
+        .intro-rule {
+            position: fixed;
+            z-index: 2;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            width: 2px;
+            background: #fff;
+            box-shadow: 0 0 0 1px #000;
+            animation: intro-rule 5.0s cubic-bezier(0.77, 0, 0.18, 1) 0.95s forwards;
+        }
+        .intro-caption {
+            position: absolute;
+            left: 50%;
+            bottom: 11vh;
+            transform: translateX(-50%);
+            font: 600 11px/1 "Courier New", monospace;
+            letter-spacing: 0.32em;
+            white-space: nowrap;
+        }
+        .intro-caption::before {
+            content: "";
+            display: inline-block;
+            width: 28px;
+            height: 1px;
+            margin: 0 12px 3px 0;
+            background: #000;
+        }
+        .intro-screen.is-leaving {
+            pointer-events: none;
+            animation: intro-leave 0.85s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+        }
+        .intro-screen.is-skipped .intro-sweep { animation: none; width: 100vw; }
+        .intro-screen.is-skipped .intro-rule {
+            animation: none;
+            left: 100%;
+            width: 2px;
+        }
+        @keyframes intro-sweep { to { width: 100vw; } }
+        @keyframes intro-rule { to { left: 100%; } }
+        @keyframes intro-caret { 0%, 45% { opacity: 1; } 46%, 100% { opacity: 0; } }
+        @keyframes intro-leave { to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
+        @media (prefers-reduced-motion: reduce) {
+            .intro-sweep { animation-duration: 0.01ms; animation-delay: 0.01ms; }
+            .intro-rule { animation-duration: 0.01ms; animation-delay: 0.01ms; }
+            .intro-screen.is-leaving { animation-duration: 0.01ms; }
+        }
     </style>
-    <!-- 图标库（可选） -->
+    <!-- 图标库 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body>
+<body class="intro-active">
+
+<div class="intro-screen" id="intro-screen" role="button" tabindex="0" aria-label="跳过开场动画">
+    <div class="intro-corner">Personal interface / 2026</div>
+    <div class="intro-index">001 — ASYNC25</div>
+    <div class="intro-mark" aria-hidden="true">
+        <span class="intro-word intro-word-base">Async25</span>
+    </div>
+    <div class="intro-sweep" aria-hidden="true">
+        <span class="intro-word">To Our Future</span>
+    </div>
+    <div class="intro-rule" aria-hidden="true"></div>
+    <div class="intro-caption">ENTER THE UNKNOWN</div>
+</div>
 
 <main class="layout">
     <aside class="sidebar">
@@ -568,7 +720,7 @@
     </aside>
 </main>
 
-<footer>© 2026 Async25 | 能工智人制作 | V1.01</footer>
+<footer>© 2026 Async25 | 能工智人制作 | V1.10</footer>
 
 <script>
 (function () {
@@ -802,6 +954,38 @@
         e.preventDefault();
         showHome();
     });
+})();
+</script>
+
+<script>
+(function () {
+    var intro = document.getElementById("intro-screen");
+    var body = document.body;
+    var leaving = false;
+    var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function dismissIntro(skipAnimation) {
+        if (leaving) return;
+        leaving = true;
+        intro.classList.toggle("is-skipped", !!skipAnimation);
+        intro.classList.add("is-leaving");
+        window.setTimeout(function () {
+            intro.remove();
+            body.classList.remove("intro-active");
+        }, skipAnimation || reducedMotion ? 50 : 850);
+    }
+
+    intro.addEventListener("click", function () { dismissIntro(true); });
+    intro.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" || event.key === "Escape" || event.key === " ") {
+            event.preventDefault();
+            dismissIntro(true);
+        }
+    });
+
+    window.setTimeout(function () {
+        dismissIntro(false);
+    }, reducedMotion ? 100 : 7150);
 })();
 </script>
 
