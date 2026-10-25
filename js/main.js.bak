@@ -1,0 +1,274 @@
+// Main Application Initialization
+class App {
+    constructor() {
+        this.init();
+    }
+    
+    async init() {
+        // Show loading screen
+        this.showLoading();
+        
+        // Initialize all systems
+        await this.preloadAssets();
+        this.setupPerformanceOptimizations();
+        this.setupAccessibility();
+        this.setupAnalytics();
+        
+        // Hide loading screen after everything is ready
+        setTimeout(() => {
+            this.hideLoading();
+        }, 1500);
+    }
+    
+    showLoading() {
+        const overlay = document.querySelector('.loading-overlay');
+        if (overlay) {
+            overlay.classList.remove('hidden');
+        }
+    }
+    
+    hideLoading() {
+        const overlay = document.querySelector('.loading-overlay');
+        if (overlay) {
+            overlay.classList.add('hidden');
+            
+            // Animate page elements
+            this.animateInitialLoad();
+        }
+    }
+    
+    async preloadAssets() {
+        // Preload critical assets
+        const promises = [];
+        
+        // Preload fonts
+        if (document.fonts) {
+            promises.push(document.fonts.ready);
+        }
+        
+        // Preload background image
+        const bgImage = new Image();
+        bgImage.src = 'WaterSurface.jpg';
+        promises.push(new Promise((resolve) => {
+            bgImage.onload = resolve;
+            bgImage.onerror = resolve; // Continue even if image fails
+        }));
+        
+        await Promise.all(promises);
+    }
+    
+    setupPerformanceOptimizations() {
+        // Debounce resize events
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                window.dispatchEvent(new Event('optimizedResize'));
+            }, 250);
+        });
+        
+        // Throttle scroll events
+        let scrollTimeout;
+        let lastScroll = 0;
+        
+        window.addEventListener('scroll', () => {
+            const now = Date.now();
+            if (now - lastScroll > 100) {
+                lastScroll = now;
+                window.dispatchEvent(new Event('optimizedScroll'));
+            }
+        }, { passive: true });
+        
+        // Reduce motion for users who prefer it
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            document.documentElement.style.setProperty('--transition-fast', '0ms');
+            document.documentElement.style.setProperty('--transition-base', '0ms');
+            document.documentElement.style.setProperty('--transition-slow', '0ms');
+            document.documentElement.style.setProperty('--transition-smooth', '0ms');
+        }
+        
+        // Use Intersection Observer for lazy animations
+        this.setupLazyAnimations();
+    }
+    
+    setupLazyAnimations() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '50px'
+        });
+        
+        // Observe all animatable elements
+        document.querySelectorAll('.skill-card, .project-card, .timeline-item, .link-card').forEach(el => {
+            observer.observe(el);
+        });
+    }
+    
+    setupAccessibility() {
+        // Add skip to main content link
+        const skipLink = document.createElement('a');
+        skipLink.href = '#main';
+        skipLink.className = 'skip-link';
+        skipLink.textContent = 'Skip to main content';
+        skipLink.style.cssText = `
+            position: absolute;
+            top: -100px;
+            left: 0;
+            background: var(--accent-cyan);
+            color: var(--bg-deep);
+            padding: 0.5rem 1rem;
+            z-index: 10000;
+            transition: top 0.3s;
+        `;
+        
+        skipLink.addEventListener('focus', () => {
+            skipLink.style.top = '0';
+        });
+        
+        skipLink.addEventListener('blur', () => {
+            skipLink.style.top = '-100px';
+        });
+        
+        document.body.insertBefore(skipLink, document.body.firstChild);
+        
+        // Set ARIA labels
+        document.querySelector('.main-nav')?.setAttribute('aria-label', 'Main navigation');
+        document.querySelector('.content-wrapper')?.setAttribute('id', 'main');
+        document.querySelector('.content-wrapper')?.setAttribute('role', 'main');
+        
+        // Keyboard navigation enhancement
+        this.enhanceKeyboardNavigation();
+    }
+    
+    enhanceKeyboardNavigation() {
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Alt + number for quick navigation
+            if (e.altKey && !e.ctrlKey && !e.shiftKey) {
+                const key = parseInt(e.key);
+                if (key >= 1 && key <= 5) {
+                    const pages = ['home', 'skills', 'projects', 'experience', 'links'];
+                    const page = pages[key - 1];
+                    window.location.hash = page;
+                    e.preventDefault();
+                }
+            }
+            
+            // Escape to close music playlist
+            if (e.key === 'Escape') {
+                const playlist = document.querySelector('.player-playlist.open');
+                if (playlist) {
+                    playlist.classList.remove('open');
+                }
+            }
+        });
+        
+        // Focus visible enhancement
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab') {
+                document.body.classList.add('keyboard-nav');
+            }
+        });
+        
+        document.addEventListener('mousedown', () => {
+            document.body.classList.remove('keyboard-nav');
+        });
+        
+        // Add focus visible styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .keyboard-nav *:focus {
+                outline: 2px solid var(--accent-cyan) !important;
+                outline-offset: 2px !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    setupAnalytics() {
+        // Track page views
+        const trackPageView = (page) => {
+            console.log('Page view:', page);
+            // Add your analytics code here (e.g., Google Analytics)
+        };
+        
+        // Track initial page
+        trackPageView(window.location.hash.slice(1) || 'home');
+        
+        // Track navigation
+        window.addEventListener('hashchange', () => {
+            trackPageView(window.location.hash.slice(1));
+        });
+    }
+    
+    animateInitialLoad() {
+        // Animate navigation
+        const nav = document.querySelector('.main-nav');
+        if (nav) {
+            nav.style.opacity = '0';
+            nav.style.transform = 'translateY(-20px)';
+            setTimeout(() => {
+                nav.style.transition = 'all 0.6s cubic-bezier(0.16, 1, 0.3, 1)';
+                nav.style.opacity = '1';
+                nav.style.transform = 'translateY(0)';
+            }, 300);
+        }
+        
+        // Animate active page content
+        const activePage = document.querySelector('.page.active');
+        if (activePage) {
+            const elements = activePage.querySelectorAll('.hero-title-group, .github-heatmap-3d');
+            elements.forEach((el, index) => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    el.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+                    el.style.opacity = '1';
+                    el.style.transform = 'translateY(0)';
+                }, 500 + index * 200);
+            });
+        }
+        
+        // Animate music player
+        const player = document.querySelector('.music-player');
+        if (player) {
+            player.style.opacity = '0';
+            player.style.transform = 'translateY(20px) scale(0.9)';
+            setTimeout(() => {
+                player.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+                player.style.opacity = '1';
+                player.style.transform = 'translateY(0) scale(1)';
+            }, 900);
+        }
+    }
+}
+
+// Initialize application
+document.addEventListener('DOMContentLoaded', () => {
+    new App();
+});
+
+// Handle page visibility for performance
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+        // Pause non-critical animations when page is hidden
+        console.log('Page hidden - pausing animations');
+    } else {
+        // Resume animations
+        console.log('Page visible - resuming animations');
+    }
+});
+
+// Log initialization
+console.log('%cAsync25 Portfolio', 'font-size: 24px; font-weight: bold; color: #22D3EE;');
+console.log('%cBuilt with modern web technologies', 'font-size: 14px; color: #94A3B8;');
+console.log('%c- WebGL Particle System', 'color: #4FD1C5;');
+console.log('%c- Fluid Simulation', 'color: #4FD1C5;');
+console.log('%c- 3D GitHub Heatmap', 'color: #4FD1C5;');
+console.log('%c- Audio Visualization', 'color: #4FD1C5;');
+console.log('%c- Advanced Animations', 'color: #4FD1C5;');

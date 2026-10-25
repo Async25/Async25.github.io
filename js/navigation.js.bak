@@ -1,0 +1,79 @@
+// Navigation System
+class Navigation {
+    constructor() {
+        this.currentPage = 'home';
+        this.setupNavigation();
+        this.setupHashNavigation();
+    }
+    
+    setupNavigation() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = link.dataset.page;
+                this.navigateToPage(page);
+            });
+        });
+    }
+    
+    setupHashNavigation() {
+        // Handle initial hash
+        const hash = window.location.hash.slice(1);
+        if (hash) {
+            this.navigateToPage(hash);
+        }
+        
+        // Handle hash changes
+        window.addEventListener('hashchange', () => {
+            const hash = window.location.hash.slice(1);
+            if (hash) {
+                this.navigateToPage(hash);
+            }
+        });
+    }
+    
+    navigateToPage(page) {
+        if (this.currentPage === page) return;
+        
+        // Update nav active state
+        document.querySelectorAll('.nav-link').forEach(link => {
+            if (link.dataset.page === page) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+        
+        // Get current and next pages
+        const currentPageEl = document.getElementById(`page-${this.currentPage}`);
+        const nextPageEl = document.getElementById(`page-${page}`);
+        
+        if (!nextPageEl) return;
+        
+        // Remove active from current
+        if (currentPageEl) {
+            currentPageEl.classList.remove('active');
+        }
+        
+        // Add active to next with slight delay for transition
+        setTimeout(() => {
+            nextPageEl.classList.add('active');
+        }, 50);
+        
+        // Update current page
+        this.currentPage = page;
+        
+        // Update URL hash
+        window.location.hash = page;
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    new Navigation();
+});

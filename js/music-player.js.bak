@@ -1,0 +1,296 @@
+// Music Player with Audio Visualization
+class MusicPlayer {
+    constructor() {
+        this.playlist = [];
+        this.currentTrackIndex = 0;
+        this.audio = new Audio();
+        this.isPlaying = false;
+        
+        // Audio context for visualization
+        this.audioContext = null;
+        this.analyser = null;
+        this.dataArray = null;
+        this.bufferLength = 0;
+        
+        this.setupAudioVisualization();
+        this.loadPlaylist();
+        this.setupControls();
+        this.setupProgressBar();
+        
+        // Update UI periodically
+        setInterval(() => this.updateProgress(), 100);
+    }
+    
+    async loadPlaylist() {
+        // Scan music folder
+        const musicFiles = [
+            'DAMIDAMI.m4a',
+            'DAMIDAMI(伴奏).m4a',
+            "You're Not Supposed to Be Here.m4a",
+            '不虚此行.m4a',
+            '東南苦行山.m4a',
+            '河北墨麒麟.m4a',
+            '揪心的玩笑与漫长的白日梦.m4a',
+            '凝固的浪花.m4a',
+            '山雀.m4a',
+            '妄想色心跳.m4a',
+            '帷幕视窗.m4a',
+            '为往昔而行.m4a',
+            '再度和你.m4a'
+        ];
+        
+        this.playlist = musicFiles.map(file => ({
+            filename: file,
+            title: file.replace(/\.[^.]+$/, '').replace(/\([^)]*\)/g, '').trim(),
+            path: `music/${file}`,
+            duration: 0 // Will be loaded when played
+        }));
+        
+        this.renderPlaylist();
+        this.loadTrack(0);
+    }
+    
+    setupAudioVisualization() {
+        const canvas = document.getElementById('audio-visualizer');
+        if (!canvas) return;
+        
+        this.visualizerCanvas = canvas;
+        this.visualizerCtx = canvas.getContext('2d');
+        
+        const resizeVisualizer = () => {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            this.visualizerCtx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        };
+        
+        resizeVisualizer();
+        window.addEventListener('resize', resizeVisualizer);
+        
+        this.animateVisualizer();
+    }
+    
+    initAudioContext() {
+        if (this.audioContext) return;
+        
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.analyser = this.audioContext.createAnalyser();
+        this.analyser.fftSize = 256;
+        
+        const source = this.audioContext.createMediaElementSource(this.audio);
+        source.connect(this.analyser);
+        this.analyser.connect(this.audioContext.destination);
+        
+        this.bufferLength = this.analyser.frequencyBinCount;
+        this.dataArray = new Uint8Array(this.bufferLength);
+    }
+    
+    animateVisualizer() {
+        if (!this.visualizerCanvas) return;
+        
+        const canvas = this.visualizerCanvas;
+        const ctx = this.visualizerCtx;
+        const width = canvas.width / window.devicePixelRatio;
+        const height = canvas.height / window.devicePixelRatio;
+        
+        const draw = () => {
+            ctx.fillStyle = 'rgba(30, 41, 59, 0.3)';
+            ctx.fillRect(0, 0, width, height);
+            
+            if (this.analyser && this.isPlaying) {
+                this.analyser.getByteFrequencyData(this.dataArray);
+                
+                const barCount = 64;
+                const barWidth = width / barCount;
+                
+                for (let i = 0; i < barCount; i++) {
+                    const dataIndex = Math.floor(i * this.bufferLength / barCount);
+                    const value = this.dataArray[dataIndex];
+                    const barHeight = (value / 255) * height * 0.8;
+                    
+                    const x = i * barWidth;
+                    const y = height - barHeight;
+                    
+                    // Create gradient
+                    const gradient = ctx.createLinearGradient(x, y, x, height);
+                    gradient.addColorStop(0, 'rgba(34, 211, 238, 0.8)');
+                    gradient.addColorStop(0.5, 'rgba(79, 209, 197, 0.6)');
+                    gradient.addColorStop(1, 'rgba(34, 211, 238, 0.3)');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x, y, barWidth - 2, barHeight);
+                }
+            } else {
+                // Idle animation
+                const time = Date.now() * 0.001;
+                const barCount = 64;
+                const barWidth = width / barCount;
+                
+                for (let i = 0; i < barCount; i++) {
+                    const wave = Math.sin(time * 2 + i * 0.2) * 0.3 + 0.7;
+                    const barHeight = wave * height * 0.15;
+                    
+                    const x = i * barWidth;
+                    const y = height - barHeight;
+                    
+                    ctx.fillStyle = 'rgba(34, 211, 238, 0.2)';
+                    ctx.fillRect(x, y, barWidth - 2, barHeight);
+                }
+            }
+            
+            requestAnimationFrame(draw);
+        };
+        
+        draw();
+    }
+    
+    setupControls() {
+        const playBtn = document.querySelector('[data-action="play"]');
+        const prevBtn = document.querySelector('[data-action="prev"]');
+        const nextBtn = document.querySelector('[data-action="next"]');
+        const playlistBtn = document.querySelector('[data-action="playlist"]');
+        
+        if (playBtn) {
+            playBtn.addEventListener('click', () => this.togglePlay());
+        }
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => this.previousTrack());
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => this.nextTrack());
+        }
+        
+        if (playlistBtn) {
+            playlistBtn.addEventListener('click', () => this.togglePlaylist());
+        }
+        
+        this.audio.addEventListener('ended', () => this.nextTrack());
+        this.audio.addEventListener('loadedmetadata', () => {
+            const duration = this.formatTime(this.audio.duration);
+            document.querySelector('.time-total').textContent = duration;
+        });
+    }
+    
+    setupProgressBar() {
+        const progressBar = document.querySelector('.progress-bar');
+        if (!progressBar) return;
+        
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            this.audio.currentTime = percent * this.audio.duration;
+        });
+    }
+    
+    loadTrack(index) {
+        if (index < 0 || index >= this.playlist.length) return;
+        
+        this.currentTrackIndex = index;
+        const track = this.playlist[index];
+        
+        this.audio.src = track.path;
+        
+        document.querySelector('.track-title').textContent = track.title;
+        document.querySelector('.track-artist').textContent = 'Async25 Collection';
+        
+        this.updatePlaylistUI();
+    }
+    
+    togglePlay() {
+        if (!this.audioContext) {
+            this.initAudioContext();
+        }
+        
+        if (this.isPlaying) {
+            this.audio.pause();
+            this.isPlaying = false;
+            document.querySelector('[data-action="play"] .btn-icon').textContent = '▶';
+            document.querySelector('.player-disc').classList.remove('playing');
+        } else {
+            this.audio.play();
+            this.isPlaying = true;
+            document.querySelector('[data-action="play"] .btn-icon').textContent = '⏸';
+            document.querySelector('.player-disc').classList.add('playing');
+        }
+    }
+    
+    previousTrack() {
+        const newIndex = this.currentTrackIndex - 1;
+        if (newIndex >= 0) {
+            this.loadTrack(newIndex);
+            if (this.isPlaying) {
+                setTimeout(() => this.audio.play(), 100);
+            }
+        }
+    }
+    
+    nextTrack() {
+        const newIndex = (this.currentTrackIndex + 1) % this.playlist.length;
+        this.loadTrack(newIndex);
+        if (this.isPlaying) {
+            setTimeout(() => this.audio.play(), 100);
+        }
+    }
+    
+    updateProgress() {
+        if (this.audio.duration) {
+            const percent = (this.audio.currentTime / this.audio.duration) * 100;
+            document.querySelector('.progress-fill').style.width = percent + '%';
+            document.querySelector('.progress-handle').style.left = percent + '%';
+            document.querySelector('.time-current').textContent = this.formatTime(this.audio.currentTime);
+        }
+    }
+    
+    formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+    
+    renderPlaylist() {
+        const playlistContainer = document.querySelector('.player-playlist');
+        if (!playlistContainer) return;
+        
+        playlistContainer.innerHTML = this.playlist.map((track, index) => `
+            <div class="playlist-item" data-index="${index}">
+                <span class="playlist-item-title">${track.title}</span>
+                <span class="playlist-item-duration">--:--</span>
+            </div>
+        `).join('');
+        
+        // Add click handlers
+        playlistContainer.querySelectorAll('.playlist-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const index = parseInt(item.dataset.index);
+                this.loadTrack(index);
+                if (this.isPlaying) {
+                    setTimeout(() => this.audio.play(), 100);
+                }
+            });
+        });
+    }
+    
+    updatePlaylistUI() {
+        document.querySelectorAll('.playlist-item').forEach((item, index) => {
+            if (index === this.currentTrackIndex) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+    }
+    
+    togglePlaylist() {
+        const playlist = document.querySelector('.player-playlist');
+        if (playlist) {
+            playlist.classList.toggle('open');
+        }
+    }
+}
+
+// Initialize music player
+document.addEventListener('DOMContentLoaded', () => {
+    new MusicPlayer();
+});

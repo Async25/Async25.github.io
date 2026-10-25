@@ -3,838 +3,211 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>泥嚎,我是Async25</title>
-    <style>
-        :root {
-            --text: #ffffff;
-            --text-secondary: rgba(255, 255, 255, 0.75);
-            --accent: #6bdfff;
-        }
+    <title>Async25 - Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay">
+        <div class="loading-spinner"></div>
+    </div>
 
-        * { margin:0; padding:0; box-sizing:border-box; }
+    <!-- Static Circuit Background -->
+    <div class="background-circuit"></div>
 
-        /* ===== 背景图 + 遮罩 ===== */
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: url("https://bee-reg-ab.imagency.cn/p/1f77d3e4f14a1797d3783e8a220c2d1c.jpg") no-repeat center center fixed;
-            background-size: cover;
-            -webkit-background-size: cover;
-            color: var(--text);
-            line-height: 1.6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            padding: 20px;
-            position: relative;
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 0;
-            pointer-events: none;
-        }
+    <!-- Main Navigation (Hidden on home page, shown on sub-pages) -->
+    <nav class="main-nav">
+        <a href="#home" class="nav-link" data-page="home">首页</a>
+        <a href="#skills" class="nav-link" data-page="skills">技能</a>
+        <a href="#projects" class="nav-link" data-page="projects">项目</a>
+        <a href="#experience" class="nav-link" data-page="experience">经历</a>
+        <a href="#links" class="nav-link" data-page="links">友链</a>
+    </nav>
 
-        /* ===== 三栏布局 ===== */
-        .layout {
-            position: relative;
-            z-index: 1;
-            display: grid;
-            grid-template-columns: 320px 1fr 240px;
-            gap: 24px;
-            width: 100%;
-            max-width: 1400px;
-            margin: 0 auto;
-            flex: 1;
-            align-items: start;
-        }
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Home Page -->
+        <div id="page-home" class="page active">
+            <section class="hero-section">
+                <div class="hero-title-group">
+                    <h1 class="hero-title">ASYNC25</h1>
+                    <p class="hero-subtitle">SOFTWARE ENGINEER</p>
+                </div>
 
-        /* 左侧边栏 */
-        .sidebar {
-            position: sticky;
-            top: 20px;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
-            border-radius: 20px;
-            text-align: center;
-            transition: transform 0.3s;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(107, 223, 255, 0.3) transparent;
-        }
-        .sidebar::-webkit-scrollbar { width: 5px; }
-        .sidebar::-webkit-scrollbar-track { background: transparent; }
-        .sidebar::-webkit-scrollbar-thumb {
-            background: rgba(107, 223, 255, 0.3);
-            border-radius: 3px;
-        }
-        .avatar {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            margin: 28px auto 10px;
-            object-fit: cover;
-            border: 4px solid var(--accent);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-        }
-        h1 {
-            font-size: 24px;
-            margin: 10px 0;
-            color: var(--accent);
-            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
-        }
-        .tagline {
-            color: var(--text-secondary);
-            font-size: 14px;
-            margin-bottom: 18px;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-        }
-        .bio {
-            padding: 0 24px;
-            margin-bottom: 20px;
-            font-size: 14px;
-            color: var(--text-secondary);
-            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-        }
-        .links {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            padding: 0 18px 28px;
-        }
-        .links a {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            background: var(--accent);
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 13px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-        .links a:hover {
-            transform: scale(1.08);
-            box-shadow: 0 6px 20px rgba(107, 223, 255, 0.35);
-        }
-        .links a i { font-size: 16px; }
+                <!-- Navigation Cards -->
+                <div class="nav-cards-grid">
+                    <a href="#skills" class="nav-card" data-page="skills">
+                        <div class="nav-card-icon">⚡</div>
+                        <h3 class="nav-card-title">技能简历</h3>
+                        <p class="nav-card-description">专业技能、技术栈与核心能力展示</p>
+                    </a>
 
-        /* 中间栏 */
-        .feed {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            padding: 10px 0 40px;
-        }
+                    <a href="#projects" class="nav-card" data-page="projects">
+                        <div class="nav-card-icon">🚀</div>
+                        <h3 class="nav-card-title">项目展示</h3>
+                        <p class="nav-card-description">精选作品、技术方案与实现细节</p>
+                    </a>
 
-        .news-item {
-            display: block;
-            position: relative;
-            padding: 22px 28px;
-            cursor: pointer;
-            transition: all 0.25s;
-            border-left: 3px solid transparent;
-            border-radius: 0 16px 16px 0;
-            text-decoration: none;
-        }
-        .news-item::before {
-            content: "";
-            position: absolute;
-            left: 8px;
-            top: 28px;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.25);
-            transition: all 0.25s;
-        }
-        .news-item:hover,
-        .news-item.active {
-            background: rgba(255, 255, 255, 0.05);
-            border-left-color: var(--accent);
-        }
-        .news-item:hover::before,
-        .news-item.active::before {
-            background: var(--accent);
-            box-shadow: 0 0 10px rgba(107, 223, 255, 0.6);
-        }
-        .news-item:hover {
-            transform: translateX(4px);
-        }
-        .news-item .news-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 6px;
-            padding-left: 18px;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
-            transition: color 0.25s;
-        }
-        .news-item:hover .news-title,
-        .news-item.active .news-title {
-            color: var(--accent);
-        }
-        .news-item .news-summary {
-            font-size: 13px;
-            color: var(--text-secondary);
-            line-height: 1.7;
-            padding-left: 18px;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
-        }
-        .news-item .news-meta {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.45);
-            margin-top: 10px;
-            padding-left: 18px;
-            letter-spacing: 0.5px;
-        }
+                    <a href="#experience" class="nav-card" data-page="experience">
+                        <div class="nav-card-icon">📅</div>
+                        <h3 class="nav-card-title">经历时间轴</h3>
+                        <p class="nav-card-description">职业发展历程与教育背景</p>
+                    </a>
 
-        /* 中间内容占位页 */
-        .page-content {
-            padding: 32px 36px;
-            border-radius: 20px;
-            background: rgba(0, 0, 0, 0.22);
-            border: 1px solid rgba(255, 255, 255, 0.10);
-            backdrop-filter: blur(10px);
-            min-height: 260px;
-        }
-        .page-content h2 {
-            font-size: 26px;
-            color: var(--accent);
-            margin-bottom: 14px;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
-        }
-        .page-content p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            margin-bottom: 12px;
-        }
-        .page-content .back-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 18px;
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 13px;
-            transition: all 0.25s;
-        }
-        .page-content .back-link:hover {
-            color: #8ae8ff;
-            transform: translateX(-4px);
-        }
-        .page-content h3 {
-            font-size: 20px;
-            color: var(--text);
-            margin-bottom: 10px;
-            text-shadow: 0 1px 4px rgba(0,0,0,0.4);
-        }
+                    <a href="#links" class="nav-card" data-page="links">
+                        <div class="nav-card-icon">🔗</div>
+                        <h3 class="nav-card-title">友情链接</h3>
+                        <p class="nav-card-description">同行伙伴、技术社区与资源推荐</p>
+                    </a>
+                </div>
 
-        /* 右侧预留区 */
-        .aside-right {
-            position: sticky;
-            top: 20px;
-            min-height: 120px;
-            border-radius: 20px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px dashed rgba(255, 255, 255, 0.12);
-            overflow: hidden;
-        }
-        .aside-right p {
-            padding: 20px;
-            font-size: 14px;
-            color: var(--text);
-            line-height: 1.6;
-        }
-        .aside-right img {
-            display: block;
-            width: calc(100% - 40px);
-            margin: 0 20px 20px;
-            border-radius: 12px;
-        }
-
-        footer {
-            position: relative;
-            z-index: 1;
-            margin-top: 24px;
-            text-align: center;
-            font-size: 13px;
-            color: var(--text-secondary);
-            text-shadow: 0 1px 4px rgba(0,0,0,0.5);
-        }
-
-        @media (max-width: 1100px) {
-            .layout {
-                grid-template-columns: 280px 1fr;
-            }
-            .aside-right { display: none; }
-        }
-        @media (max-width: 760px) {
-            .layout {
-                grid-template-columns: 1fr;
-            }
-            .sidebar {
-                position: static;
-            }
-        }
-
-        /* ===== 左侧音乐组件 ===== */
-        .music-widget {
-            margin: 0 18px 24px;
-            padding: 18px;
-            border-radius: 18px;
-            background: rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(10px);
-            text-align: left;
-            transition: all 0.3s;
-        }
-        .music-widget:hover {
-            border-color: rgba(107, 223, 255, 0.35);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-        }
-        .music-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-        }
-        .music-cover {
-            width: 48px;
-            height: 48px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, rgba(107,223,255,0.35), rgba(107,223,255,0.08));
-            border: 1px solid rgba(107, 223, 255, 0.25);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: var(--accent);
-            flex-shrink: 0;
-            position: relative;
-            overflow: hidden;
-        }
-        .music-cover::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 60%);
-        }
-        .playing .music-cover i {
-            animation: musicPulse 1.2s ease-in-out infinite;
-        }
-        @keyframes musicPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.15); opacity: 0.75; }
-        }
-        .music-info {
-            min-width: 0;
-        }
-        .music-label {
-            font-size: 11px;
-            color: rgba(255,255,255,0.5);
-            margin-bottom: 2px;
-        }
-        .music-title {
-            font-size: 13px;
-            color: var(--text);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 170px;
-        }
-        .music-controls {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        .music-controls .main-btns {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .music-controls button {
-            border: none;
-            background: transparent;
-            color: var(--text);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.25s;
-            border-radius: 50%;
-        }
-        .music-controls button:hover {
-            color: var(--accent);
-            transform: scale(1.1);
-        }
-        .music-controls .btn-toggle {
-            width: 42px;
-            height: 42px;
-            background: var(--accent);
-            color: white;
-            font-size: 16px;
-            box-shadow: 0 4px 14px rgba(107, 223, 255, 0.35);
-        }
-        .music-controls .btn-toggle:hover {
-            background: #8ae8ff;
-            color: white;
-            transform: scale(1.08);
-        }
-        .music-controls .btn-sm {
-            width: 32px;
-            height: 32px;
-            font-size: 13px;
-            color: rgba(255,255,255,0.85);
-        }
-        .music-progress {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-        }
-        .progress-bar {
-            flex: 1;
-            height: 4px;
-            border-radius: 2px;
-            background: rgba(255,255,255,0.15);
-            overflow: hidden;
-            cursor: pointer;
-        }
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            background: var(--accent);
-            border-radius: 2px;
-            transition: width 0.2s linear;
-            box-shadow: 0 0 8px rgba(107, 223, 255, 0.5);
-        }
-        .music-time {
-            font-size: 10px;
-            color: rgba(255,255,255,0.5);
-            font-variant-numeric: tabular-nums;
-        }
-        .music-vol {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .music-vol i {
-            font-size: 12px;
-            color: rgba(255,255,255,0.6);
-            width: 14px;
-            text-align: center;
-        }
-        input[type=range].vol-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            flex: 1;
-            height: 4px;
-            background: rgba(255,255,255,0.15);
-            border-radius: 2px;
-            outline: none;
-            cursor: pointer;
-        }
-        input[type=range].vol-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 6px rgba(107, 223, 255, 0.6);
-            cursor: pointer;
-        }
-        input[type=range].vol-slider::-moz-range-thumb {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 6px rgba(107, 223, 255, 0.6);
-            cursor: pointer;
-            border: none;
-        }
-    
-    </style>
-    <!-- 图标库 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-<main class="layout">
-    <aside class="sidebar">
-        <img src="121482807.jpg" alt="头像" class="avatar">
-
-        <h1>Here , as Async25</h1>
-        <p class="tagline">端子开发 / 嵌入式攻城狮 / DREAMer(?</p>
-
-        <div class="bio">
-            这里是Async25，电子系学生<br>
-            Relax，nothing is in control
+                <!-- GitHub Heatmap 3D -->
+                <div class="github-heatmap-3d">
+                    <div class="heatmap-header">
+                        <h2 class="heatmap-title">GitHub 贡献热力图</h2>
+                        <p class="heatmap-subtitle">过去一年的代码提交活跃度</p>
+                    </div>
+                    <div class="heatmap-container">
+                        <canvas id="heatmap-canvas"></canvas>
+                    </div>
+                </div>
+            </section>
         </div>
 
-        <div class="links">
-            <a href="https://github.com/Async25" target="_blank">
-                <i class="fab fa-github"></i> GitHub
-            </a>
-            <a href="https://space.bilibili.com/2141027128" target="_blank">
-                <i class="fab fa-bilibili"></i> B站
-            </a>
-            <a href="https://t.me/SanyueQi" target="_blank">
-                <i class="fab fa-telegram"></i> TG
-            </a>
-            <a href="mailto:gusaa187@gmail.com">
-                <i class="fas fa-envelope"></i> 邮件
-            </a>
-        </div>
+        <!-- Skills Page -->
+        <div id="page-skills" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <h1 class="page-title">技能简历</h1>
+                    <p class="page-subtitle">专业技能与技术栈</p>
+                </div>
 
-        <div class="music-widget" id="music-widget">
-            <div class="music-header">
-                <div class="music-cover"><i class="fas fa-music"></i></div>
-                <div class="music-info">
-                    <div class="music-label">正在播放</div>
-                    <div class="music-title" id="music-title">点击播放</div>
+                <div class="skills-grid">
+                    <!-- Skill cards will be generated by JS -->
                 </div>
             </div>
-            <div class="music-controls">
-                <div class="main-btns">
-                    <button class="btn-sm" id="music-prev" title="上一首"><i class="fas fa-backward"></i></button>
-                    <button class="btn-toggle" id="music-toggle" title="播放 / 暂停"><i class="fas fa-play"></i></button>
-                    <button class="btn-sm" id="music-next" title="下一首"><i class="fas fa-forward"></i></button>
+        </div>
+
+        <!-- Projects Page -->
+        <div id="page-projects" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <h1 class="page-title">项目展示</h1>
+                    <p class="page-subtitle">精选作品与技术实现</p>
                 </div>
-                <button class="btn-sm" id="music-mode" title="随机播放"><i class="fas fa-shuffle"></i></button>
-            </div>
-            <div class="music-progress">
-                <span class="music-time" id="current-time">0:00</span>
-                <div class="progress-bar" id="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-                <span class="music-time" id="duration">0:00</span>
-            </div>
-            <div class="music-vol">
-                <i class="fas fa-volume-high" id="vol-icon"></i>
-                <input type="range" class="vol-slider" id="vol-slider" min="0" max="1" step="0.01" value="0.7">
+
+                <div class="projects-grid">
+                    <!-- Project cards will be generated by JS -->
+                </div>
             </div>
         </div>
-    </aside>
 
-    <section class="feed" id="feed">
-        <div id="feed-list">
-            <a class="news-item" href="#" data-page="projects">
-                <div class="news-title">技术栈</div>
-                <div class="news-summary">个人技能及未来兴趣方向</div>
-                <div class="news-meta">idea</div>
-            </a>
-
-            <a class="news-item" href="#" data-page="blog">
-                <div class="news-title">项目</div>
-                <div class="news-summary">主要项目记录</div>
-                <div class="news-meta">经历</div>
-            </a>
-
-            <a class="news-item" href="#" data-page="gallery">
-                <div class="news-title">图集</div>
-                <div class="news-summary">暂无内容</div>
-                <div class="news-meta">展示</div>
-            </a>
-
-            <a class="news-item" href="#" data-page="links">
-                <div class="news-title">友链</div>
-                <div class="news-summary">群贤毕至，高朋满座</div>
-                <div class="news-meta">推荐</div>
-            </a>
-
-            <a class="news-item" href="#" data-page="about">
-                <div class="news-title">关于</div>
-                <div class="news-summary">暂无内容</div>
-                <div class="news-meta">历史</div>
-            </a>
+        <!-- Project Detail Page -->
+        <div id="page-project-detail" class="page">
+            <div class="page-container project-detail-container">
+                <a href="#projects" class="project-detail-back">← 返回项目</a>
+                <div class="project-detail-hero">
+                    <img id="project-detail-image" class="project-detail-image" src="example.jpg" alt="项目预览">
+                    <div class="project-detail-heading">
+                        <p class="project-detail-kicker">PROJECT CASE STUDY</p>
+                        <h1 id="project-detail-title" class="page-title">项目详情</h1>
+                        <p id="project-detail-tech" class="project-detail-techline"></p>
+                    </div>
+                </div>
+                <div class="project-detail-body">
+                    <p id="project-detail-description" class="project-detail-description"></p>
+                    <div id="project-detail-content" class="project-detail-copy"></div>
+                </div>
+            </div>
         </div>
 
-        <section class="page-content" id="page-view" style="display: none;">
-            <h2 id="page-title"></h2>
-            <h3 id="page-subtitle"></h3>
-            <div id="page-body"></div>
-            <a class="back-link" href="#" id="back-home"><i class="fas fa-arrow-left"></i> 返回首页</a>
-        </section>
-    </section>
+        <!-- Experience Page -->
+        <div id="page-experience" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <h1 class="page-title">经历时间轴</h1>
+                    <p class="page-subtitle">职业发展与教育背景</p>
+                </div>
 
-    <aside class="aside-right">
-        <p>天才程序员belike:</p>
-        <img src="https://bee-reg-ab.imagency.cn/mr/5075/26/cd55e0e3c1dab921c6584d59d182d776.png" alt="123456">
-    </aside>
-</main>
+                <div class="experience-timeline">
+                    <!-- Timeline items will be generated by JS -->
+                </div>
+            </div>
+        </div>
 
-<footer>© 2026 Async25 | 能工智人制作 | V1.23</footer>
+        <!-- Links Page -->
+        <div id="page-links" class="page">
+            <div class="page-container">
+                <div class="page-header">
+                    <h1 class="page-title">友情链接</h1>
+                    <p class="page-subtitle">同行伙伴与技术社区</p>
+                </div>
 
-<script>
-(function () {
-    var playlist = [
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/DAMIDAMI(%E4%BC%B4%E5%A5%8F).m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%A6%84%E6%83%B3%E8%89%B2%E5%BF%83%E8%B7%B3.m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E4%B8%8D%E8%99%9A%E6%AD%A4%E8%A1%8C.m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%86%8D%E5%BA%A6%E5%92%8C%E4%BD%A0.m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%E5%B1%B1%E9%9B%80.m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/DAMIDAMI.m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/You%e2%80%99re+Not+Supposed+to+Be+Here.m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%e6%9d%b1%e5%8d%97%e8%8b%a6%e8%a1%8c%e5%b1%b1.m4a", 
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%e6%b2%b3%e5%8c%97%e5%a2%a8%e9%ba%92%e9%ba%9f.m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%e6%8f%aa%e5%bf%83%e7%9a%84%e7%8e%a9%e7%ac%91%e4%b8%8e%e6%bc%ab%e9%95%bf%e7%9a%84%e7%99%bd%e6%97%a5%e6%a2%a6.m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%e5%87%9d%e5%9b%ba%e7%9a%84%e6%b5%aa%e8%8a%b1.m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%e5%b8%b7%e5%b9%95%e8%a7%86%e7%aa%97.m4a",
-        "https://cdn.jsdelivr.net/gh/Async25/Async25.github.io@main/%e4%b8%ba%e5%be%80%e6%98%94%e8%80%8c%e8%a1%8c.m4a",
-    ];
-    var audio = new Audio();
-    audio.volume = 0.7;
-    var queue = [];
-    var qi = 0;
-    var history = [];
-    var playing = false;
+                <div class="links-grid">
+                    <!-- Link cards will be generated by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-    var widget = document.getElementById("music-widget");
-    var titleEl = document.getElementById("music-title");
-    var toggleBtn = document.getElementById("music-toggle");
-    var toggleIcon = toggleBtn.querySelector("i");
-    var volSlider = document.getElementById("vol-slider");
-    var volIcon  = document.getElementById("vol-icon");
-    var progressBar = document.getElementById("progress-bar");
-    var progressFill = document.getElementById("progress-fill");
-    var currentTimeEl = document.getElementById("current-time");
-    var durationEl = document.getElementById("duration");
+    <!-- Music Player -->
+    <div class="music-player">
+        <div class="player-track-info">
+            <div class="player-album-art" id="album-art">A</div>
+            <div class="player-text">
+                <div class="player-title" id="track-title">加载中...</div>
+                <div class="player-artist" id="track-artist">Async25</div>
+            </div>
+        </div>
 
-    function shuffle(arr) {
-        var r = arr.slice();
-        for (var i = r.length - 1; i > 0; i--) {
-            var j = Math.floor(Math.random() * (i + 1));
-            var t = r[i]; r[i] = r[j]; r[j] = t;
-        }
-        return r;
-    }
+        <div class="player-visualizer">
+            <canvas id="audio-visualizer"></canvas>
+        </div>
 
-    function baseName(src) {
-        try {
-            var url = new URL(src);
-            var name = url.pathname.split('/').pop();
-            name = decodeURIComponent(name);
-            return name.replace(/\.m4a$/i, "");
-        } catch (e) {
-            return src.replace(/\.m4a$/i, "");
-        }
-    }
+        <div class="player-progress">
+            <div class="progress-bar" id="progress-bar" role="slider" tabindex="0" aria-label="播放进度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="0:00 / 0:00">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="progress-time">
+                <span id="current-time">0:00</span>
+                <span id="total-time">0:00</span>
+            </div>
+        </div>
 
-    function formatTime(t) {
-        if (!isFinite(t)) return "0:00";
-        var m = Math.floor(t / 60);
-        var s = Math.floor(t % 60);
-        return m + ":" + (s < 10 ? "0" + s : s);
-    }
+        <div class="player-controls">
+            <button class="player-button" id="prev-button" aria-label="上一首">⏮</button>
+            <button class="player-button play-pause" id="play-pause-button" aria-label="播放">▶</button>
+            <button class="player-button" id="next-button" aria-label="下一首">⏭</button>
+        </div>
 
-    function updatePlayState(isPlaying) {
-        playing = isPlaying;
-        if (playing) {
-            widget.classList.add("playing");
-            toggleIcon.className = "fas fa-pause";
-        } else {
-            widget.classList.remove("playing");
-            toggleIcon.className = "fas fa-play";
-        }
-    }
+        <div class="player-volume" aria-label="音量控制">
+            <button class="volume-mute-button" id="volume-mute-button" type="button" aria-label="静音">🔊</button>
+            <input id="volume-slider" class="volume-slider" type="range" min="0" max="100" value="100" aria-label="音量" aria-valuetext="100%">
+            <span id="volume-value" class="volume-value">100%</span>
+        </div>
 
-    function playSrc(src) {
-        audio.src = src;
-        audio.play().then(function () {
-            updatePlayState(true);
-            titleEl.textContent = baseName(src);
-        }).catch(function () {
-            updatePlayState(false);
-        });
-    }
+        <div class="player-playlist-toggle" id="playlist-toggle">
+            播放列表 ▼
+        </div>
 
-    function playNext() {
-        history.push(queue[qi - 1]);
-        if (qi >= queue.length) {
-            queue = shuffle(playlist);
-            qi = 0;
-        }
-        playSrc(queue[qi++]);
-    }
+        <div class="player-playlist" id="player-playlist">
+            <!-- Playlist items will be generated by JS -->
+        </div>
+    </div>
 
-    function playPrev() {
-        if (history.length > 0) {
-            var prev = history.pop();
-            playSrc(prev);
-        }
-    }
-
-    function updateVolIcon(v) {
-        volIcon.className = "fas " + (v === 0 ? "fa-volume-xmark" : v < 0.35 ? "fa-volume-low" : "fa-volume-high");
-    }
-
-    audio.addEventListener("ended", playNext);
-
-    audio.addEventListener("timeupdate", function () {
-        if (audio.duration) {
-            progressFill.style.width = (audio.currentTime / audio.duration * 100) + "%";
-        }
-        currentTimeEl.textContent = formatTime(audio.currentTime);
-    });
-
-    audio.addEventListener("loadedmetadata", function () {
-        durationEl.textContent = formatTime(audio.duration);
-    });
-
-    toggleBtn.addEventListener("click", function () {
-        if (playing) {
-            audio.pause();
-            updatePlayState(false);
-        } else {
-            if (!audio.src) {
-                if (queue.length === 0) {
-                    queue = shuffle(playlist);
-                    qi = 0;
-                }
-                playSrc(queue[qi++]);
-            } else {
-                audio.play();
-                updatePlayState(true);
-            }
-        }
-    });
-
-    document.getElementById("music-next").addEventListener("click", playNext);
-    document.getElementById("music-prev").addEventListener("click", playPrev);
-
-    progressBar.addEventListener("click", function (e) {
-        if (!audio.duration) return;
-        var rect = progressBar.getBoundingClientRect();
-        var ratio = (e.clientX - rect.left) / rect.width;
-        audio.currentTime = ratio * audio.duration;
-    });
-
-    volSlider.addEventListener("input", function () {
-        var v = parseFloat(volSlider.value);
-        audio.volume = v;
-        updateVolIcon(v);
-    });
-})();
-</script>
-
-<script>
-(function () {
-    var feedList = document.getElementById("feed-list");
-    var pageView = document.getElementById("page-view");
-    var pageTitle = document.getElementById("page-title");
-    var pageSubtitle = document.getElementById("page-subtitle");
-    var pageBody = document.getElementById("page-body");
-    var backHome = document.getElementById("back-home");
-    var items = document.querySelectorAll(".news-item");
-
-    var pages = {
-        projects: [{ title: "Software", 
-                     body: ["· RK，Jetson，Raspberry Pi；STM32、MSPM0，ESP32", 
-                            "· PWM，TIM，ADC，UART，SPI，I2C；PID、Kalman Filter；", 
-                            "· CUDA-OpenCV，YOLO；C，Cpp，Python",
-                            "· Hermes，Codex，Trae"] },
-                   { title: "Hardware", 
-                     body: ["· JLC-EDA for double layer PCB design；Oldering iron，Reflow Soldering；Multimeter，Logic analyzer", 
-                            "· SketchUp、SolidWorks for 3D printing"] },
-                   { title: "Future Plan", 
-                     body: ["· FreeRTOS， FPGA，4~6layer/high-speed PCB design，BGA/QFN soldering，ROS2",]
-                   }],
-        blog:     [{ title: "| 车载平衡滚球运动控制系统 (2026全国大学生电子设计竞赛 H题) 参赛项目", 
-                     body: ["· 负责部分: PCB扩展板设计，小车控制、滚球控制、视觉识别代码部分", 
-                           "· 核心技术: 2层PCB设计，双环/串级PID，梯形加减速，大津法", 
-                           "· 详细介绍: <br>视觉主控采用瑞芯微RK3576，配合全局快门USB摄像头，避免钢球快速滚动产生的形变。通过固定曝光和大津法二值化，减少变化和不均匀的环境光影响，利用动态ROI区域进一步提升性能。尝试传统“闭运算修复+圆度拟合”的识别思路时遇到钢球反光严重问题，随后改为直接提取不与边界粘连的最大连通区作外接矩形，保持120fps性能同时识别准度极佳<br>小车主控为TI-MSPM0G3507，使用AT8236驱动两路编码器减速电机，驱动电流和加减速性能较传统TB6612更优。通过权值法处理八路灰度传感器获得连续误差值，利用“速度+误差”双环PID进行控制，题目循迹部分均获满分<br>步进电机主控选用STM32F407VET6，使用TMC2209开环驱动42步进电机，理论旋转精度达0.007度。通过串口接收上位机发送的实际水管倾角与钢球距目标偏差，使用串级PID计算目标水管倾角与电机转速设定，并结合梯形加减速算法避免丢步影响"]},
-                   { title: "| 简易自行瞄准装置 (2025全国大学生电子设计竞赛 E题) 赛后复刻", 
-                     body: ["· 负责部分: 全栈复刻", 
-                           "· 核心技术: 云台结构设计，前馈控制，共轴光路，逆透视变换", 
-                           "· 详细介绍: <br>云台部分使用瑞芯微RK3576作上位机，结合长焦镜头，将闭运算后提取的轮廓经过面积过滤、顶点个数、夹角计算、边长比例筛选、平行度检测，实现复杂背景下的目标矩形框准确识别；随后使用逆透视变换计算精确标靶中心点位，较对角线交点法更靠近物理中心位置。<br>云台下位机使用STM32F407VET6，将x、y两个方向上的像素误差作为外环PID控制输入，结合ICM42688陀螺仪的Yaw角反馈作内环PID，辅助云台与底盘解耦。<br>云台结构使用过孔导电滑环，通过长轴步进电机的同时保证旋转电气连接，激光头通过分光片与摄像头中心实现光路共轴，完全消除不同距离下的激光照射位置误差。<br>底盘主控为TI-MSPM0G3507，转向时切换MPU6050陀螺仪Yaw角积分作为PID输入，保证转向过程平缓稳定。"] },
-                   { title: "| RS485转Wi-Fi/4G双模工业边缘网关 企业项目",
-                     body: ["· 负责部分: 边缘终端设备全栈设计",
-                          "· 核心技术: --",
-                          "· 详细介绍: --"]
-                   }],
-        gallery:  [{ title: "施工中", body: ["123456", "123456", "123456"] },
-                   { title: "施工中", body: ["123456", "123456", "123456"] }],
-        links:    [{ title: "ByteMind", body: ["<p><a href=\"https://github.com/1024XEngineer/bytemind\">面向真实代码仓库的终端原生 AI Coding Agent</a>", ""] },
-                   { title: "996.ICU", body: ["<p><a href=\"https://996.icu/#/zh_CN\">工作 996，生病 ICU</a>", ""] },
-                   { title: "Hermes", body: ["<p><a href=\"https://github.com/NousResearch/hermes-agent\">my favourite agent</a>", ""] }],   
-        about:    [{ title: "施工中", body: ["123456", "123456", "123456"] },
-                   { title: "施工中", body: ["123456", "123456", "123456"] }]
-    };
-
-    function showHome() {
-        pageView.style.display = "none";
-        feedList.style.display = "block";
-        items.forEach(function (item) { item.classList.remove("active"); });
-        document.title = "page-Async25";
-    }
-
-    function showPage(pageId) {
-        var item = document.querySelector('.news-item[data-page="' + pageId + '"]');
-        var title = item ? item.querySelector(".news-title").textContent : pageId;
-        var sections = pages[pageId] || [{ title: "123456", body: ["123456"] }];
-
-        feedList.style.display = "none";
-        pageTitle.textContent = title;
-
-        // 用 h3 输出每个小节标题，下面紧跟该小节的正文段落
-        pageBody.innerHTML = sections.map(function (sec) {
-            return "<h3>" + sec.title + "</h3>" +
-                sec.body.map(function (line) { return "<p>" + line + "</p>"; }).join("");
-        }).join("");
-
-        pageView.style.display = "block";
-        document.title = title + " | Async25";
-    }
-
-    items.forEach(function (item) {
-        item.addEventListener("click", function (e) {
-            e.preventDefault();
-            showPage(item.getAttribute("data-page"));
-        });
-    });
-
-    backHome.addEventListener("click", function (e) {
-        e.preventDefault();
-        showHome();
-    });
-})();
-</script>
-
-<script>
-(function () {
-    var intro = document.getElementById("intro-screen");
-    var body = document.body;
-    var leaving = false;
-    var reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    function dismissIntro(skipAnimation) {
-        if (leaving) return;
-        leaving = true;
-        intro.classList.toggle("is-skipped", !!skipAnimation);
-        intro.classList.add("is-leaving");
-        window.setTimeout(function () {
-            intro.remove();
-            body.classList.remove("intro-active");
-        }, skipAnimation || reducedMotion ? 50 : 850);
-    }
-
-    intro.addEventListener("click", function () { dismissIntro(true); });
-    intro.addEventListener("keydown", function (event) {
-        if (event.key === "Enter" || event.key === "Escape" || event.key === " ") {
-            event.preventDefault();
-            dismissIntro(true);
-        }
-    });
-
-    window.setTimeout(function () {
-        dismissIntro(false);
-    }, reducedMotion ? 100 : 7150);
-})();
-</script>
-
+    <!-- Scripts -->
+    <script src="js/heatmap3d.js"></script>
+    <script src="js/music-player.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/skills.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/experience.js"></script>
+    <script src="js/links.js"></script>
+    <script src="js/transitions.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

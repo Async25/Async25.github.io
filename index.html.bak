@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Async25 - Electronic Portfolio</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/particles.css">
+    <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+    <!-- Background Layers -->
+    <div class="bg-layer water-surface"></div>
+    <div class="bg-layer gradient-overlay"></div>
+    <canvas id="particles-canvas"></canvas>
+    <canvas id="fluid-canvas"></canvas>
+    
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="nav-brand">
+            <div class="brand-glyph"></div>
+            <span class="brand-text">ASYNC25</span>
+        </div>
+        <div class="nav-links">
+            <a href="#home" class="nav-link active" data-page="home">
+                <span class="nav-icon">◈</span>
+                <span class="nav-label">HOME</span>
+            </a>
+            <a href="#skills" class="nav-link" data-page="skills">
+                <span class="nav-icon">◆</span>
+                <span class="nav-label">SKILLS</span>
+            </a>
+            <a href="#projects" class="nav-link" data-page="projects">
+                <span class="nav-icon">◇</span>
+                <span class="nav-label">PROJECTS</span>
+            </a>
+            <a href="#experience" class="nav-link" data-page="experience">
+                <span class="nav-icon">◈</span>
+                <span class="nav-label">EXPERIENCE</span>
+            </a>
+            <a href="#links" class="nav-link" data-page="links">
+                <span class="nav-icon">◆</span>
+                <span class="nav-label">LINKS</span>
+            </a>
+        </div>
+        <div class="nav-status">
+            <span class="status-dot"></span>
+            <span class="status-text">ONLINE</span>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="content-wrapper">
+        
+        <!-- Home Page -->
+        <section id="page-home" class="page active">
+            <div class="home-hero">
+                <div class="hero-content">
+                    <div class="hero-title-group">
+                        <h1 class="hero-title">
+                            <span class="title-line">ASYNC<span class="title-accent">25</span></span>
+                            <span class="title-subtitle">ELECTRONIC PORTFOLIO</span>
+                        </h1>
+                        <div class="hero-tagline">
+                            <span class="tagline-text">Developer</span>
+                            <span class="tagline-separator">·</span>
+                            <span class="tagline-text">Creator</span>
+                            <span class="tagline-separator">·</span>
+                            <span class="tagline-text">Explorer</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 3D GitHub Heatmap -->
+                <div class="github-heatmap-3d">
+                    <div class="heatmap-header">
+                        <span class="heatmap-title">CONTRIBUTION MATRIX</span>
+                        <span class="heatmap-stats">
+                            <span class="stat-item"><span class="stat-value">365</span> days</span>
+                            <span class="stat-separator">|</span>
+                            <span class="stat-item"><span class="stat-value">1247</span> commits</span>
+                        </span>
+                    </div>
+                    <div class="heatmap-container">
+                        <canvas id="heatmap-canvas"></canvas>
+                        <div class="heatmap-controls">
+                            <button class="heatmap-btn" data-action="rotate">
+                                <span class="btn-icon">↻</span>
+                                <span class="btn-text">ROTATE</span>
+                            </button>
+                            <button class="heatmap-btn" data-action="perspective">
+                                <span class="btn-icon">⊞</span>
+                                <span class="btn-text">VIEW</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Music Player -->
+            <div class="music-player">
+                <div class="player-visual">
+                    <canvas id="audio-visualizer"></canvas>
+                    <div class="player-disc">
+                        <div class="disc-inner"></div>
+                    </div>
+                </div>
+                <div class="player-controls">
+                    <div class="player-info">
+                        <div class="track-title">DAMIDAMI</div>
+                        <div class="track-artist">Async25 Collection</div>
+                    </div>
+                    <div class="player-progress">
+                        <span class="time-current">0:00</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                            <div class="progress-handle"></div>
+                        </div>
+                        <span class="time-total">3:24</span>
+                    </div>
+                    <div class="player-buttons">
+                        <button class="player-btn" data-action="prev">
+                            <span class="btn-icon">⏮</span>
+                        </button>
+                        <button class="player-btn player-btn-play" data-action="play">
+                            <span class="btn-icon">▶</span>
+                        </button>
+                        <button class="player-btn" data-action="next">
+                            <span class="btn-icon">⏭</span>
+                        </button>
+                        <button class="player-btn" data-action="playlist">
+                            <span class="btn-icon">☰</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="player-playlist">
+                    <!-- Playlist will be populated by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Page -->
+        <section id="page-skills" class="page">
+            <div class="page-header">
+                <h2 class="page-title">TECHNICAL SKILLS</h2>
+                <div class="page-subtitle">Expertise & Capabilities</div>
+            </div>
+            <div class="skills-grid">
+                <!-- Skills will be populated by JS -->
+            </div>
+        </section>
+
+        <!-- Projects Page -->
+        <section id="page-projects" class="page">
+            <div class="page-header">
+                <h2 class="page-title">FEATURED PROJECTS</h2>
+                <div class="page-subtitle">Selected Works & Contributions</div>
+            </div>
+            <div class="projects-grid">
+                <!-- Projects will be populated by JS -->
+            </div>
+        </section>
+
+        <!-- Experience Page -->
+        <section id="page-experience" class="page">
+            <div class="page-header">
+                <h2 class="page-title">EXPERIENCE TIMELINE</h2>
+                <div class="page-subtitle">Professional Journey</div>
+            </div>
+            <div class="experience-timeline">
+                <!-- Timeline will be populated by JS -->
+            </div>
+        </section>
+
+        <!-- Links Page -->
+        <section id="page-links" class="page">
+            <div class="page-header">
+                <h2 class="page-title">FRIEND LINKS</h2>
+                <div class="page-subtitle">Connections & Resources</div>
+            </div>
+            <div class="links-grid">
+                <!-- Links will be populated by JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay">
+        <div class="loading-spinner">
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+            <div class="spinner-ring"></div>
+        </div>
+        <div class="loading-text">INITIALIZING</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/particles.js"></script>
+    <script src="js/fluid.js"></script>
+    <script src="js/heatmap3d.js"></script>
+    <script src="js/music-player.js"></script>
+    <script src="js/navigation.js"></script>
+    <script src="js/skills.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/experience.js"></script>
+    <script src="js/links.js"></script>
+    <script src="js/transitions.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

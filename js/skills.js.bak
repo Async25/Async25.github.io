@@ -1,0 +1,118 @@
+// Skills Page with Dynamic Layout and Charts
+class SkillsManager {
+    constructor() {
+        this.skills = [
+            {
+                name: 'Web Development',
+                category: 'Frontend',
+                level: 95,
+                icon: '⚡',
+                tags: ['React', 'Vue', 'TypeScript', 'CSS3']
+            },
+            {
+                name: 'Backend Engineering',
+                category: 'Backend',
+                level: 90,
+                icon: '⚙',
+                tags: ['Node.js', 'Python', 'Go', 'PostgreSQL']
+            },
+            {
+                name: 'DevOps & Cloud',
+                category: 'Infrastructure',
+                level: 85,
+                icon: '☁',
+                tags: ['Docker', 'Kubernetes', 'AWS', 'CI/CD']
+            },
+            {
+                name: 'Machine Learning',
+                category: 'AI/ML',
+                level: 80,
+                icon: '🧠',
+                tags: ['TensorFlow', 'PyTorch', 'NLP', 'Computer Vision']
+            },
+            {
+                name: 'Mobile Development',
+                category: 'Mobile',
+                level: 75,
+                icon: '📱',
+                tags: ['React Native', 'Flutter', 'iOS', 'Android']
+            },
+            {
+                name: 'System Design',
+                category: 'Architecture',
+                level: 88,
+                icon: '🏗',
+                tags: ['Microservices', 'Distributed Systems', 'Scalability']
+            },
+            {
+                name: 'Database Design',
+                category: 'Data',
+                level: 92,
+                icon: '💾',
+                tags: ['SQL', 'NoSQL', 'Redis', 'MongoDB']
+            },
+            {
+                name: 'Security',
+                category: 'Security',
+                level: 82,
+                icon: '🔒',
+                tags: ['OAuth', 'JWT', 'Encryption', 'Penetration Testing']
+            },
+            {
+                name: 'UI/UX Design',
+                category: 'Design',
+                level: 78,
+                icon: '🎨',
+                tags: ['Figma', 'Adobe XD', 'User Research', 'Prototyping']
+            }
+        ];
+        
+        this.render();
+        this.setupObserver();
+    }
+    
+    render() {
+        const container = document.querySelector('.skills-grid');
+        if (!container) return;
+        
+        container.innerHTML = this.skills.map((skill, index) => `
+            <div class="skill-card" data-index="${index}">
+                <div class="skill-icon" style="animation-delay: ${index * 0.1}s">${skill.icon}</div>
+                <div class="skill-name">${skill.name}</div>
+                <div class="skill-category">${skill.category}</div>
+                <div class="skill-level">
+                    <div class="level-bar">
+                        <div class="level-fill" style="--level-width: ${skill.level}%"></div>
+                    </div>
+                </div>
+                <div class="skill-tags">
+                    ${skill.tags.map(tag => `<span class="skill-tag">${tag}</span>`).join('')}
+                </div>
+            </div>
+        `).join('');
+        
+        // Add stagger animation
+        container.querySelectorAll('.skill-card').forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+    }
+    
+    setupObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.skill-card').forEach(card => {
+            observer.observe(card);
+        });
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    new SkillsManager();
+});

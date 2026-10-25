@@ -1,0 +1,313 @@
+// 3D GitHub Heatmap using Canvas
+class GitHubHeatmap3D {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        
+        // Generate mock contribution data (52 weeks * 7 days)
+        this.weeks = 52;
+        this.days = 7;
+        this.data = this.generateMockData();
+        
+        // 3D parameters
+        this.rotationX = 25; // degrees
+        this.rotationY = 30;
+        this.autoRotate = false;
+        this.perspective = 800;
+        
+        // Visual parameters
+        this.cellSize = 8;
+        this.cellGap = 2;
+        this.heightScale = 30;
+        
+        this.resize();
+        this.setupControls();
+        this.animate();
+        
+        window.addEventListener('resize', () => this.resize());
+    }
+    
+    resize() {
+        const rect = this.canvas.getBoundingClientRect();
+        this.canvas.width = rect.width * window.devicePixelRatio;
+        this.canvas.height = rect.height * window.devicePixelRatio;
+        this.ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        this.width = rect.width;
+        this.height = rect.height;
+    }
+    
+    generateMockData() {
+        const data = [];
+        for (let week = 0; week < this.weeks; week++) {
+            data[week] = [];
+            for (let day = 0; day < this.days; day++) {
+                // Generate realistic-looking commit pattern
+                const isWeekend = day === 0 || day === 6;
+                const baseActivity = isWeekend ? 0.2 : 0.6;
+                const randomFactor = Math.random();
+                const value = randomFactor < 0.3 ? 0 : // 30% no commits
+                             randomFactor < 0.5 ? Math.floor(Math.random() * 5) : // 20% low
+                             randomFactor < 0.8 ? Math.floor(Math.random() * 15) + 5 : // 30% medium
+                             Math.floor(Math.random() * 20) + 15; // 20% high
+                data[week][day] = Math.floor(value * baseActivity);
+            }
+        }
+        return data;
+    }
+    
+    setupControls() {
+        const rotateBtn = document.querySelector('[data-action="rotate"]');
+        const perspectiveBtn = document.querySelector('[data-action="perspective"]');
+        
+        if (rotateBtn) {
+            rotateBtn.addEventListener('click', () => {
+                this.autoRotate = !this.autoRotate;
+                rotateBtn.style.background = this.autoRotate ? 
+                    'rgba(34, 211, 238, 0.3)' : 'rgba(34, 211, 238, 0.1)';
+            });
+        }
+        
+        if (perspectiveBtn) {
+            let viewIndex = 0;
+            const views = [
+                { x: 25, y: 30 },
+                { x: 45, y: 45 },
+                { x: 10, y: 60 },
+                { x: 60, y: 15 }
+            ];
+            
+            perspectiveBtn.addEventListener('click', () => {
+                viewIndex = (viewIndex + 1) % views.length;
+                this.rotationX = views[viewIndex].x;
+                this.rotationY = views[viewIndex].y;
+            });
+        }
+        
+        // Mouse drag to rotate
+        let isDragging = false;
+        let lastX = 0, lastY = 0;
+        
+        this.canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastX = e.clientX;
+            lastY = e.clientY;
+            this.autoRotate = false;
+        });
+        
+        window.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                const deltaX = e.clientX - lastX;
+                const deltaY = e.clientY - lastY;
+                
+                this.rotationY += deltaX * 0.5;
+                this.rotationX += deltaY * 0.5;
+                
+                // Clamp X rotation
+                this.rotationX = Math.max(-89, Math.min(89, this.rotationX));
+                
+                lastX = e.clientX;
+                lastY = e.clientY;
+            }
+        });
+        
+        window.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+    }
+    
+    project3D(x, y, z) {
+        // Apply rotations
+        const radX = (this.rotationX * Math.PI) / 180;
+        const radY = (this.rotationY * Math.PI) / 180;
+        
+        // Rotate around Y axis
+        let x1 = x * Math.cos(radY) - z * Math.sin(radY);
+        let z1 = x * Math.sin(radY) + z * Math.cos(radY);
+        
+        // Rotate around X axis
+        let y1 = y * Math.cos(radX) - z1 * Math.sin(radX);
+        let z2 = y * Math.sin(radX) + z1 * Math.cos(radX);
+        
+        // Perspective projection
+        const scale = this.perspective / (this.perspective + z2);
+        
+        return {
+            x: x1 * scale + this.width / 2,
+            y: -y1 * scale + this.height / 2,
+            z: z2,
+            scale: scale
+        };
+    }
+    
+    getColor(value) {
+        if (value === 0) return 'rgba(30, 41, 59, 0.3)'; // No commits
+        
+        // Create gradient from dark to bright cyan
+        const intensity = Math.min(value / 20, 1);
+        const hue = 190; // Cyan
+        const saturation = 60 + intensity * 30;
+        const lightness = 30 + intensity * 40;
+        
+        return `hsla(${hue}, ${saturation}%, ${lightness}%, 0.9)`;
+    }
+    
+    draw() {
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        
+        // Calculate total grid dimensions
+        const gridWidth = this.weeks * (this.cellSize + this.cellGap);
+        const gridHeight = this.days * (this.cellSize + this.cellGap);
+        
+        // Center offset
+        const offsetX = -gridWidth / 2;
+        const offsetY = -gridHeight / 2;
+        
+        // Create array of cells with their 3D coordinates
+        const cells = [];
+        
+        for (let week = 0; week < this.weeks; week++) {
+            for (let day = 0; day < this.days; day++) {
+                const value = this.data[week][day];
+                const height = (value / 20) * this.heightScale;
+                
+                const x = offsetX + week * (this.cellSize + this.cellGap);
+                const y = offsetY + day * (this.cellSize + this.cellGap);
+                const z = height;
+                
+                cells.push({ week, day, value, x, y, z, height });
+            }
+        }
+        
+        // Sort cells by Z depth (painter's algorithm)
+        cells.sort((a, b) => {
+            const projA = this.project3D(a.x, a.y, a.z);
+            const projB = this.project3D(b.x, b.y, b.z);
+            return projB.z - projA.z;
+        });
+        
+        // Draw cells
+        cells.forEach(cell => {
+            this.drawCell(cell);
+        });
+        
+        // Draw grid base
+        this.ctx.strokeStyle = 'rgba(34, 211, 238, 0.1)';
+        this.ctx.lineWidth = 1;
+        
+        // Horizontal lines
+        for (let day = 0; day <= this.days; day++) {
+            const y = offsetY + day * (this.cellSize + this.cellGap);
+            const start = this.project3D(offsetX, y, 0);
+            const end = this.project3D(offsetX + gridWidth, y, 0);
+            
+            this.ctx.beginPath();
+            this.ctx.moveTo(start.x, start.y);
+            this.ctx.lineTo(end.x, end.y);
+            this.ctx.stroke();
+        }
+        
+        // Vertical lines
+        for (let week = 0; week <= this.weeks; week++) {
+            const x = offsetX + week * (this.cellSize + this.cellGap);
+            const start = this.project3D(x, offsetY, 0);
+            const end = this.project3D(x, offsetY + gridHeight, 0);
+            
+            this.ctx.beginPath();
+            this.ctx.moveTo(start.x, start.y);
+            this.ctx.lineTo(end.x, end.y);
+            this.ctx.stroke();
+        }
+    }
+    
+    drawCell(cell) {
+        const { x, y, z, value, height } = cell;
+        const size = this.cellSize;
+        
+        // Project corners of the cube
+        const corners = [
+            this.project3D(x, y, 0),           // bottom-front-left
+            this.project3D(x + size, y, 0),    // bottom-front-right
+            this.project3D(x + size, y + size, 0), // bottom-back-right
+            this.project3D(x, y + size, 0),    // bottom-back-left
+            this.project3D(x, y, z),           // top-front-left
+            this.project3D(x + size, y, z),    // top-front-right
+            this.project3D(x + size, y + size, z), // top-back-right
+            this.project3D(x, y + size, z)     // top-back-left
+        ];
+        
+        const color = this.getColor(value);
+        
+        // Draw visible faces
+        // Top face
+        this.ctx.fillStyle = color;
+        this.ctx.beginPath();
+        this.ctx.moveTo(corners[4].x, corners[4].y);
+        this.ctx.lineTo(corners[5].x, corners[5].y);
+        this.ctx.lineTo(corners[6].x, corners[6].y);
+        this.ctx.lineTo(corners[7].x, corners[7].y);
+        this.ctx.closePath();
+        this.ctx.fill();
+        
+        // Front face (darker)
+        this.ctx.fillStyle = this.adjustBrightness(color, 0.7);
+        this.ctx.beginPath();
+        this.ctx.moveTo(corners[0].x, corners[0].y);
+        this.ctx.lineTo(corners[1].x, corners[1].y);
+        this.ctx.lineTo(corners[5].x, corners[5].y);
+        this.ctx.lineTo(corners[4].x, corners[4].y);
+        this.ctx.closePath();
+        this.ctx.fill();
+        
+        // Right face (darkest)
+        this.ctx.fillStyle = this.adjustBrightness(color, 0.5);
+        this.ctx.beginPath();
+        this.ctx.moveTo(corners[1].x, corners[1].y);
+        this.ctx.lineTo(corners[2].x, corners[2].y);
+        this.ctx.lineTo(corners[6].x, corners[6].y);
+        this.ctx.lineTo(corners[5].x, corners[5].y);
+        this.ctx.closePath();
+        this.ctx.fill();
+        
+        // Edge highlights
+        if (value > 10) {
+            this.ctx.strokeStyle = 'rgba(34, 211, 238, 0.6)';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.moveTo(corners[4].x, corners[4].y);
+            this.ctx.lineTo(corners[5].x, corners[5].y);
+            this.ctx.lineTo(corners[6].x, corners[6].y);
+            this.ctx.lineTo(corners[7].x, corners[7].y);
+            this.ctx.closePath();
+            this.ctx.stroke();
+        }
+    }
+    
+    adjustBrightness(color, factor) {
+        // Simple brightness adjustment for HSL colors
+        const match = color.match(/hsla?\((\d+),\s*(\d+)%,\s*(\d+)%/);
+        if (match) {
+            const h = match[1];
+            const s = match[2];
+            const l = Math.floor(parseInt(match[3]) * factor);
+            return `hsla(${h}, ${s}%, ${l}%, 0.9)`;
+        }
+        return color;
+    }
+    
+    animate() {
+        if (this.autoRotate) {
+            this.rotationY += 0.3;
+        }
+        
+        this.draw();
+        requestAnimationFrame(() => this.animate());
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    const canvas = document.getElementById('heatmap-canvas');
+    if (canvas) {
+        new GitHubHeatmap3D(canvas);
+    }
+});

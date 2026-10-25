@@ -1,0 +1,242 @@
+// Projects Page with Card Animations and Masking Effects
+class ProjectsManager {
+    constructor() {
+        this.projects = [
+            {
+                title: 'AI Code Assistant',
+                description: 'An intelligent code completion and refactoring tool powered by transformer models. Features real-time suggestions, multi-language support, and context-aware recommendations.',
+                tech: ['Python', 'TensorFlow', 'TypeScript', 'WebSocket'],
+                image: null,
+                github: 'https://github.com/async25',
+                demo: null
+            },
+            {
+                title: 'Real-time Collaboration Platform',
+                description: 'A WebRTC-based collaboration platform with live video, screen sharing, and synchronized code editing. Built for remote teams and pair programming.',
+                tech: ['WebRTC', 'Node.js', 'React', 'Socket.io'],
+                image: null,
+                github: 'https://github.com/async25',
+                demo: null
+            },
+            {
+                title: 'Distributed Task Queue',
+                description: 'High-performance distributed task queue system with priority scheduling, fault tolerance, and horizontal scalability. Handles millions of tasks per day.',
+                tech: ['Go', 'Redis', 'PostgreSQL', 'gRPC'],
+                image: null,
+                github: 'https://github.com/async25',
+                demo: null
+            },
+            {
+                title: 'Neural Style Transfer App',
+                description: 'Mobile app for applying artistic styles to photos using neural networks. Features real-time preview and custom style training.',
+                tech: ['PyTorch', 'React Native', 'TensorFlow Lite'],
+                image: null,
+                github: 'https://github.com/async25',
+                demo: null
+            },
+            {
+                title: 'DevOps Dashboard',
+                description: 'Unified monitoring and deployment dashboard for cloud infrastructure. Integrates with major cloud providers and CI/CD pipelines.',
+                tech: ['Vue.js', 'Golang', 'Kubernetes', 'Prometheus'],
+                image: null,
+                github: 'https://github.com/async25',
+                demo: null
+            },
+            {
+                title: 'Blockchain Explorer',
+                description: 'Feature-rich blockchain explorer with transaction tracking, smart contract verification, and analytics. Supports multiple chains.',
+                tech: ['Rust', 'React', 'Web3.js', 'GraphQL'],
+                image: null,
+                github: 'https://github.com/async25',
+                demo: null
+            }
+        ];
+        
+        this.render();
+        this.setupObserver();
+    }
+    
+    render() {
+        const container = document.querySelector('.projects-grid');
+        if (!container) return;
+        
+        container.innerHTML = this.projects.map((project, index) => `
+            <div class="project-card" data-index="${index}">
+                <div class="project-thumbnail">
+                    ${this.generateProjectVisual(index)}
+                </div>
+                <div class="project-content">
+                    <h3 class="project-title">${project.title}</h3>
+                    <p class="project-description">${project.description}</p>
+                    <div class="project-tech">
+                        ${project.tech.map(tech => `<span class="tech-badge">${tech}</span>`).join('')}
+                    </div>
+                    <div class="project-links">
+                        ${project.github ? `<a href="${project.github}" class="project-link" target="_blank">GitHub</a>` : ''}
+                        ${project.demo ? `<a href="${project.demo}" class="project-link" target="_blank">Demo</a>` : ''}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    generateProjectVisual(index) {
+        // Generate abstract SVG visual for each project
+        const colors = [
+            ['#22D3EE', '#4FD1C5'],
+            ['#F97316', '#C9A24B'],
+            ['#38BDF8', '#22D3EE'],
+            ['#4FD1C5', '#38BDF8'],
+            ['#C9A24B', '#F97316'],
+            ['#22D3EE', '#F97316']
+        ];
+        
+        const [color1, color2] = colors[index % colors.length];
+        
+        const patterns = [
+            this.generateCirclePattern(color1, color2),
+            this.generateWavePattern(color1, color2),
+            this.generateGridPattern(color1, color2),
+            this.generateHexagonPattern(color1, color2),
+            this.generateSpiralPattern(color1, color2),
+            this.generateNoisePattern(color1, color2)
+        ];
+        
+        return patterns[index % patterns.length];
+    }
+    
+    generateCirclePattern(c1, c2) {
+        return `
+            <svg width="100%" height="100%" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="grad-circles" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:${c1};stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:${c2};stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+                <rect width="400" height="220" fill="#1E293B"/>
+                <circle cx="100" cy="110" r="80" fill="none" stroke="url(#grad-circles)" stroke-width="2" opacity="0.3"/>
+                <circle cx="200" cy="110" r="60" fill="none" stroke="url(#grad-circles)" stroke-width="2" opacity="0.5"/>
+                <circle cx="300" cy="110" r="100" fill="none" stroke="url(#grad-circles)" stroke-width="2" opacity="0.4"/>
+                <circle cx="150" cy="110" r="40" fill="url(#grad-circles)" opacity="0.6"/>
+                <circle cx="250" cy="110" r="30" fill="url(#grad-circles)" opacity="0.7"/>
+            </svg>
+        `;
+    }
+    
+    generateWavePattern(c1, c2) {
+        return `
+            <svg width="100%" height="100%" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="grad-wave" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:${c1};stop-opacity:0.8" />
+                        <stop offset="100%" style="stop-color:${c2};stop-opacity:0.8" />
+                    </linearGradient>
+                </defs>
+                <rect width="400" height="220" fill="#1E293B"/>
+                <path d="M0,110 Q100,50 200,110 T400,110 L400,220 L0,220 Z" fill="url(#grad-wave)" opacity="0.4"/>
+                <path d="M0,130 Q100,70 200,130 T400,130 L400,220 L0,220 Z" fill="url(#grad-wave)" opacity="0.3"/>
+                <path d="M0,150 Q100,90 200,150 T400,150 L400,220 L0,220 Z" fill="url(#grad-wave)" opacity="0.2"/>
+            </svg>
+        `;
+    }
+    
+    generateGridPattern(c1, c2) {
+        let grid = '<svg width="100%" height="100%" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">';
+        grid += `<rect width="400" height="220" fill="#1E293B"/>`;
+        
+        for (let i = 0; i < 8; i++) {
+            for (let j = 0; j < 5; j++) {
+                const x = i * 50 + 25;
+                const y = j * 50 + 10;
+                const opacity = Math.random() * 0.6 + 0.2;
+                const color = Math.random() > 0.5 ? c1 : c2;
+                grid += `<rect x="${x}" y="${y}" width="40" height="40" fill="${color}" opacity="${opacity}" rx="4"/>`;
+            }
+        }
+        
+        grid += '</svg>';
+        return grid;
+    }
+    
+    generateHexagonPattern(c1, c2) {
+        const hexPath = 'M30,0 L60,15 L60,45 L30,60 L0,45 L0,15 Z';
+        let pattern = '<svg width="100%" height="100%" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">';
+        pattern += `<rect width="400" height="220" fill="#1E293B"/>`;
+        
+        for (let i = 0; i < 6; i++) {
+            for (let j = 0; j < 4; j++) {
+                const x = i * 70 + (j % 2 ? 35 : 0);
+                const y = j * 55;
+                const color = (i + j) % 2 === 0 ? c1 : c2;
+                const opacity = 0.2 + Math.random() * 0.4;
+                pattern += `<path d="${hexPath}" transform="translate(${x},${y})" fill="none" stroke="${color}" stroke-width="2" opacity="${opacity}"/>`;
+            }
+        }
+        
+        pattern += '</svg>';
+        return pattern;
+    }
+    
+    generateSpiralPattern(c1, c2) {
+        let spiral = '<svg width="100%" height="100%" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">';
+        spiral += `<rect width="400" height="220" fill="#1E293B"/>`;
+        
+        const cx = 200, cy = 110;
+        let path = `M${cx},${cy}`;
+        
+        for (let i = 0; i < 100; i++) {
+            const angle = i * 0.3;
+            const radius = i * 1.5;
+            const x = cx + radius * Math.cos(angle);
+            const y = cy + radius * Math.sin(angle);
+            path += ` L${x},${y}`;
+        }
+        
+        spiral += `<path d="${path}" fill="none" stroke="${c1}" stroke-width="2" opacity="0.4"/>`;
+        spiral += `<path d="${path}" fill="none" stroke="${c2}" stroke-width="1" opacity="0.3" transform="rotate(45 200 110)"/>`;
+        spiral += '</svg>';
+        
+        return spiral;
+    }
+    
+    generateNoisePattern(c1, c2) {
+        let noise = '<svg width="100%" height="100%" viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">';
+        noise += `<rect width="400" height="220" fill="#1E293B"/>`;
+        
+        for (let i = 0; i < 200; i++) {
+            const x = Math.random() * 400;
+            const y = Math.random() * 220;
+            const size = Math.random() * 3 + 1;
+            const color = Math.random() > 0.5 ? c1 : c2;
+            const opacity = Math.random() * 0.5 + 0.1;
+            noise += `<circle cx="${x}" cy="${y}" r="${size}" fill="${color}" opacity="${opacity}"/>`;
+        }
+        
+        noise += '</svg>';
+        return noise;
+    }
+    
+    setupObserver() {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.project-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+            observer.observe(card);
+        });
+    }
+}
+
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    new ProjectsManager();
+});

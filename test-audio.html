@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>音频测试 - Async25</title>
+    <style>
+        body {
+            background: #0B0E14;
+            color: #F8FAFC;
+            font-family: 'Inter', sans-serif;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .test-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        button {
+            background: #22D3EE;
+            color: #0B0E14;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+        button:hover {
+            background: #4FD1C5;
+        }
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+        }
+        .success { color: #4FD1C5; }
+        .error { color: #F97316; }
+        canvas {
+            width: 100%;
+            height: 100px;
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎵 音频播放器测试</h1>
+    
+    <div class="test-card">
+        <h2>测试1：Audio 元素</h2>
+        <button id="test-audio">播放音频（直接）</button>
+        <div class="status" id="audio-status">未测试</div>
+    </div>
+    
+    <div class="test-card">
+        <h2>测试2：AudioContext + Web Audio API</h2>
+        <button id="test-context">初始化 AudioContext</button>
+        <button id="test-play">播放音频（Web Audio）</button>
+        <div class="status" id="context-status">未测试</div>
+        <canvas id="visualizer"></canvas>
+    </div>
+    
+    <div class="test-card">
+        <h2>测试3：音频文件访问</h2>
+        <button id="test-files">检查音频文件</button>
+        <div class="status" id="files-status">未测试</div>
+    </div>
+
+    <script>
+        let audio = null;
+        let audioContext = null;
+        let analyser = null;
+        let source = null;
+        
+        // Test 1: Direct audio playback
+        document.getElementById('test-audio').addEventListener('click', async () => {
+            const status = document.getElementById('audio-status');
+            try {
+                audio = new Audio('music/DAMIDAMI.m4a');
+                audio.volume = 0.5;
+                await audio.play();
+                status.innerHTML = '<span class="success">✅ 直接播放成功！音频正在播放...</span>';
+                
+                setTimeout(() => {
+                    audio.pause();
+                    status.innerHTML += '<br><span class="success">✅ 已暂停</span>';
+                }, 3000);
+            } catch (error) {
+                status.innerHTML = `<span class="error">❌ 错误: ${error.message}</span>`;
+            }
+        });
+        
+        // Test 2: AudioContext initialization
+        document.getElementById('test-context').addEventListener('click', () => {
+            const status = document.getElementById('context-status');
+            try {
+                audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                analyser = audioContext.createAnalyser();
+                analyser.fftSize = 256;
+                
+                status.innerHTML = `
+                    <span class="success">✅ AudioContext 创建成功</span><br>
+                    - State: ${audioContext.state}<br>
+                    - Sample Rate: ${audioContext.sampleRate} Hz<br>
+                    - FFT Size: ${analyser.fftSize}
+                `;
+                
+                startVisualizer();
+            } catch (error) {
+                status.innerHTML = `<span class="error">❌ 错误: ${error.message}</span>`;
+            }
+        });
+        
+        // Test 2: Web Audio playback
+        document.getElementById('test-play').addEventListener('click', async () => {
+            const status = document.getElementById('context-status');
+            
+            if (!audioContext) {
+                status.innerHTML = '<span class="error">❌ 请先初始化 AudioContext</span>';
+                return;
+            }
+            
+            try {
+                if (audio) {
+                    audio.pause();
+                }
+                
+                audio = new Audio('music/DAMIDAMI.m4a');
+                audio.crossOrigin = "anonymous";
+                audio.volume = 0.5;
+                
+                // Create source only once
+                if (!source) {
+                    source = audioContext.createMediaElementSource(audio);
+                    source.connect(analyser);
+                    analyser.connect(audioContext.destination);
+                }
+                
+                // Resume AudioContext if suspended
+                if (audioContext.state === 'suspended') {
+                    await audioContext.resume();
+                }
+                
+                await audio.play();
+                
+                status.innerHTML = `
+                    <span class="success">✅ Web Audio API 播放成功！</span><br>
+                    - AudioContext State: ${audioContext.state}<br>
+                    - Audio Duration: ${audio.duration.toFixed(2)}s<br>
+                    - Analyser Connected: Yes<br>
+                    - 频谱可视化：运行中...
+                `;
+                
+                setTimeout(() => {
+                    audio.pause();
+                    status.innerHTML += '<br><span class="success">✅ 已暂停</span>';
+                }, 5000);
+            } catch (error) {
+                status.innerHTML = `<span class="error">❌ 错误: ${error.message}</span>`;
+            }
+        });
+        
+        // Visualizer
+        function startVisualizer() {
+            const canvas = document.getElementById('visualizer');
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 100;
+            
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+            
+            function draw() {
+                requestAnimationFrame(draw);
+                
+                ctx.fillStyle = 'rgba(15, 23, 42, 0.3)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                analyser.getByteFrequencyData(dataArray);
+                
+                const barWidth = canvas.width / bufferLength * 2.5;
+                let x = 0;
+                
+                for (let i = 0; i < bufferLength; i++) {
+                    const barHeight = (dataArray[i] / 255) * canvas.height * 0.8;
+                    
+                    const gradient = ctx.createLinearGradient(0, canvas.height - barHeight, 0, canvas.height);
+                    gradient.addColorStop(0, '#22D3EE');
+                    gradient.addColorStop(1, '#4FD1C5');
+                    
+                    ctx.fillStyle = gradient;
+                    ctx.fillRect(x, canvas.height - barHeight, barWidth - 1, barHeight);
+                    
+                    x += barWidth;
+                }
+            }
+            
+            draw();
+        }
+        
+        // Test 3: File access
+        document.getElementById('test-files').addEventListener('click', async () => {
+            const status = document.getElementById('files-status');
+            const files = [
+                'music/DAMIDAMI.m4a',
+                'music/不虚此行.m4a',
+                'music/You\'re Not Supposed to Be Here.m4a'
+            ];
+            
+            status.innerHTML = '<span>检查中...</span>';
+            
+            const results = await Promise.all(files.map(async (file) => {
+                try {
+                    const response = await fetch(file, { method: 'HEAD' });
+                    const size = response.headers.get('content-length');
+                    const type = response.headers.get('content-type');
+                    return {
+                        file,
+                        ok: response.ok,
+                        size: size ? (parseInt(size) / 1024 / 1024).toFixed(2) + ' MB' : 'Unknown',
+                        type
+                    };
+                } catch (error) {
+                    return {
+                        file,
+                        ok: false,
+                        error: error.message
+                    };
+                }
+            }));
+            
+            let html = '';
+            results.forEach(r => {
+                if (r.ok) {
+                    html += `<span class="success">✅ ${r.file.split('/')[1]} (${r.size}, ${r.type})</span><br>`;
+                } else {
+                    html += `<span class="error">❌ ${r.file.split('/')[1]}: ${r.error}</span><br>`;
+                }
+            });
+            
+            status.innerHTML = html;
+        });
+    </script>
+</body>
+</html>
