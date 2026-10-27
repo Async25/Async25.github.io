@@ -3,17 +3,17 @@ class ProjectsManager {
     constructor() {
         this.projects = [
             {
-                title: 'AI Code Assistant',
-                description: '面向开发者的智能代码补全与重构工作台，将上下文理解、实时建议和工程效率整合在一个清晰的编辑体验中。',
+                title: '车载平衡滚球运动控制系统',
+                description: '26电赛H题     MSPM0 + STM32F4 + RK3576',
                 tech: ['Python', 'TypeScript', 'AI'],
-                image: 'example.jpg',
+                image: 'project1.jpg',
                 detail: '从代码搜索、上下文拼接到建议生成，项目重点探索了如何把复杂的 AI 能力变成可解释、可持续迭代的日常工具。'
             },
             {
-                title: 'Realtime Collaboration',
-                description: '支持实时同步、屏幕共享与多人协作的轻量平台，强调低延迟反馈和稳定的协作状态。',
+                title: '简易自行瞄准装置',
+                description: '25电赛E题',
                 tech: ['WebRTC', 'React', 'Node.js'],
-                image: 'example.jpg',
+                image: 'project2.jpg',
                 detail: '通过事件流、房间状态和断线恢复机制，让远程团队可以在同一工作空间中自然地沟通和共同完成任务。'
             },
             {
