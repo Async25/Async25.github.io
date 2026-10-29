@@ -5,30 +5,30 @@ class ProjectsManager {
             {
                 title: '车载平衡滚球运动控制系统',
                 description: '26电赛H题     MSPM0 + STM32F4 + RK3576',
-                tech: ['Python', 'TypeScript', 'AI'],
+                tech: ['Python/C', 'PID/Kalman', '裸机多任务'],
                 image: 'project1.jpg',
-                detail: '从代码搜索、上下文拼接到建议生成，项目重点探索了如何把复杂的 AI 能力变成可解释、可持续迭代的日常工具。'
+                detail: '。'
             },
             {
-                title: '简易自行瞄准装置',
-                description: '25电赛E题',
-                tech: ['WebRTC', 'React', 'Node.js'],
+                title: '简易自行瞄准装置（正在重制）',
+                description: '25电赛E题     MSSPM0 + STM32F4 + Jetson',
+                tech: ['C++/C', 'Kalman', 'ROS2'],
                 image: 'project2.jpg',
-                detail: '通过事件流、房间状态和断线恢复机制，让远程团队可以在同一工作空间中自然地沟通和共同完成任务。'
+                detail: '。'
             },
             {
-                title: 'Distributed Task Queue',
-                description: '面向高吞吐场景的分布式任务队列，覆盖优先级调度、失败重试和水平扩展。',
-                tech: ['Go', 'Redis', 'gRPC'],
+                title: 'RS485工业边缘网关',
+                description: '企业项目',
+                tech: ['Python', 'FreeRTOS', 'MQTT'],
                 image: 'example.jpg',
-                detail: '项目围绕可观测性和可靠性设计：任务状态清晰可追踪，服务可以按工作负载独立扩容。'
+                detail: '。'
             },
             {
-                title: 'Water Surface Study',
-                description: '以水面纹理为灵感的视觉实验，将自然材质、标题排版与交互式作品展示结合。',
+                title: '。',
+                description: '。',
                 tech: ['WebGL', 'CSS', 'Creative UI'],
                 image: 'example.jpg',
-                detail: '这是一个持续迭代的视觉原型，用于测试图像叙事、沉浸式背景和项目案例页之间的关系。'
+                detail: '。'
             }
         ];
         this.render();
