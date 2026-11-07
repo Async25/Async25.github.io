@@ -255,44 +255,6 @@ body {
     line-height: 1.6;
 }
 
-/* GitHub Heatmap Container */
-.github-heatmap-3d {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-.heatmap-header {
-    text-align: center;
-    margin-bottom: 2rem;
-}
-
-.heatmap-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-primary);
-    margin-bottom: 0.5rem;
-}
-
-.heatmap-subtitle {
-    font-size: 1rem;
-    color: var(--text-secondary);
-}
-
-.heatmap-container {
-    background: rgba(30, 41, 59, 0.5);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--border-subtle);
-    border-radius: 16px;
-    padding: 2rem;
-}
-
-#heatmap-canvas {
-    width: 100%;
-    height: 400px;
-    display: block;
-}
-
 /* Music Player */
 .music-player {
     position: fixed;

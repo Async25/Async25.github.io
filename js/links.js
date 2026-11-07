@@ -3,77 +3,78 @@ class LinksManager {
     constructor() {
         this.links = [
             {
-                name: 'TechBlog',
-                url: 'https://techblog.example.com',
-                description: 'Insights on modern web development',
-                avatar: 'T'
+                name: '996.ICU',
+                url: 'https://996.icu/#/zh_CN',
+                description: '工作996,生病ICU',
+                avatar: 'ICU'
             },
             {
-                name: 'CodeMaster',
-                url: 'https://codemaster.dev',
-                description: 'Advanced programming tutorials',
-                avatar: 'C'
-            },
-            {
-                name: 'DevOps Hub',
-                url: 'https://devopshub.io',
-                description: 'Cloud infrastructure and automation',
-                avatar: 'D'
-            },
-            {
-                name: 'AI Research',
-                url: 'https://airesearch.org',
-                description: 'Machine learning breakthroughs',
+                name: 'hermes-agent',
+                url: 'https://github.com/NousResearch/hermes-agent',
+                description: 'Grow with you',
                 avatar: 'AI'
             },
             {
-                name: 'Design Studio',
-                url: 'https://designstudio.co',
-                description: 'UI/UX design inspiration',
-                avatar: 'DS'
+                name: 'ekko-agent',
+                url: 'https://github.com/EKKOLearnAI/ekko-studio',
+                description: 'Work with us',
+                avatar: 'AI'
             },
             {
-                name: 'Open Source',
-                url: 'https://opensource.community',
-                description: 'Contributing to open source',
-                avatar: 'OS'
+                name: 'JLC EDA',
+                url: 'https://lceda.cn/',
+                description: 'Moonlight',
+                avatar: 'EDA'
             },
             {
-                name: 'Security Pro',
-                url: 'https://securitypro.net',
-                description: 'Cybersecurity best practices',
-                avatar: 'SP'
+                name: 'KK University',
+                url: 'https://github.com/CollegesChat/university-information',
+                description: 'Share and help',
+                avatar: 'UNI'
             },
             {
-                name: 'Data Science',
-                url: 'https://datascience.io',
-                description: 'Analytics and visualization',
-                avatar: 'DS'
-            },
-            {
-                name: 'Mobile Dev',
-                url: 'https://mobiledev.app',
-                description: 'Cross-platform mobile apps',
-                avatar: 'MD'
-            },
-            {
-                name: 'Cloud Native',
-                url: 'https://cloudnative.tech',
-                description: 'Kubernetes and containers',
-                avatar: 'CN'
-            },
-            {
-                name: 'Web3 World',
-                url: 'https://web3world.xyz',
-                description: 'Blockchain and decentralization',
-                avatar: 'W3'
-            },
-            {
-                name: 'Tech News',
-                url: 'https://technews.today',
-                description: 'Latest tech industry updates',
-                avatar: 'TN'
+                name: 'MU5735',
+                url: 'https://github.com/wrongly-cuddly-obsession/NTSB_FOIA_MU5735',
+                description: '孔雀东南飞,入山不复归',
+                avatar: 'AIR'
             }
+            //,
+            // {
+            //     name: 'Security Pro',
+            //     url: 'https://securitypro.net',
+            //     description: 'Cybersecurity best practices',
+            //     avatar: 'SP'
+            // },
+            // {
+            //     name: 'Data Science',
+            //     url: 'https://datascience.io',
+            //     description: 'Analytics and visualization',
+            //     avatar: 'DS'
+            // },
+            // {
+            //     name: 'Mobile Dev',
+            //     url: 'https://mobiledev.app',
+            //     description: 'Cross-platform mobile apps',
+            //     avatar: 'MD'
+            // },
+            // {
+            //     name: 'Cloud Native',
+            //     url: 'https://cloudnative.tech',
+            //     description: 'Kubernetes and containers',
+            //     avatar: 'CN'
+            // },
+            // {
+            //     name: 'Web3 World',
+            //     url: 'https://web3world.xyz',
+            //     description: 'Blockchain and decentralization',
+            //     avatar: 'W3'
+            // },
+            // {
+            //     name: 'Tech News',
+            //     url: 'https://technews.today',
+            //     description: 'Latest tech industry updates',
+            //     avatar: 'TN'
+            // }
         ];
         
         this.render();

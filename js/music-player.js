@@ -46,26 +46,40 @@ class MusicPlayer {
     }
     
     async loadPlaylist() {
-        // Music files from the music folder
+        // Static GitHub Pages cannot list a directory at runtime. Keep this list
+        // in sync with music/ when adding or removing audio files.
         const musicFiles = [
-            'DAMIDAMI.m4a',
-            'You’re Not Supposed to Be Here.m4a',
-            '不虚此行.m4a',
-            '東南苦行山.m4a',
-            '河北墨麒麟.m4a',
-            '揪心的玩笑与漫长的白日梦.m4a',
-            '凝固的浪花.m4a',
-            '山雀.m4a',
-            '妄想色心跳.m4a',
-            '帷幕视窗.m4a',
-            '为往昔而行.m4a',
-            '再度和你.m4a',
-            'DAMIDAMI(伴奏).m4a'
+            "不虚此行.m4a",
+            "東南苦行山.m4a",
+            "拂晓.m4a",
+            "河北墨麒麟.m4a",
+            "揪心的玩笑与漫长的白日梦.m4a",
+            "凝固的浪花.m4a",
+            "秦皇岛.m4a",
+            "山雀.m4a",
+            "妄想色心跳.m4a",
+            "帷幕视窗.m4a",
+            "为往昔而行.m4a",
+            "翁法罗斯英雄纪.m4a",
+            "再度和你.m4a",
+            "造访.m4a",
+            "DAMIDAMI.m4a",
+            "DAMIDAMI(伴奏).m4a",
+            "Sailing.m4a",
+            "Sea of Clouds.m4a",
+            "You’re Not Supposed to Be Here.m4a"
         ];
-        
+
+        // Fisher-Yates: one new, non-repeating queue for each page load.
+        // Playback still begins with a user gesture (browser autoplay policy).
+        for (let i = musicFiles.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [musicFiles[i], musicFiles[j]] = [musicFiles[j], musicFiles[i]];
+        }
+
         this.playlist = musicFiles.map(file => ({
             filename: file,
-            title: file.replace(/\.[^.]+$/, '').replace(/\([^)]*\)/g, '').trim(),
+            title: file.replace(/\.[^.]+$/, '').trim(),
             path: `music/${encodeURIComponent(file)}`,
             duration: 0
         }));

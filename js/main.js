@@ -143,7 +143,7 @@ class App {
         // Animate home page elements
         const activePage = document.querySelector('.page.active');
         if (activePage && activePage.id === 'page-home') {
-            const elements = activePage.querySelectorAll('.hero-title-group, .nav-cards-grid, .github-heatmap-3d');
+            const elements = activePage.querySelectorAll('.hero-title-group, .nav-cards-grid, .contact-card');
             elements.forEach((el, index) => {
                 el.style.opacity = '0';
                 el.style.transform = 'translateY(30px)';
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Log initialization
 console.log('%cAsync25 Portfolio - Optimized', 'font-size: 24px; font-weight: bold; color: #22D3EE;');
 console.log('%cStatic Circuit Board Background', 'font-size: 14px; color: #94A3B8;');
-console.log('%c- Fixed 3D GitHub Heatmap', 'color: #4FD1C5;');
+console.log('%c- Personal Contact Card', 'color: #4FD1C5;');
 console.log('%c- Audio Player with Visualization', 'color: #4FD1C5;');
 console.log('%c- Card-based Navigation', 'color: #4FD1C5;');
 console.log('%c- Performance Optimized', 'color: #4FD1C5;');

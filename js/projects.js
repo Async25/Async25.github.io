@@ -11,7 +11,7 @@ class ProjectsManager {
             },
             {
                 title: '简易自行瞄准装置（正在重制）',
-                description: '25电赛E题     MSSPM0 + STM32F4 + Jetson',
+                description: '25电赛E题     MSSPM0 + STM32H7 + Jetson',
                 tech: ['C++/C', 'Kalman', 'ROS2'],
                 image: 'project2.jpg',
                 detail: '。'
