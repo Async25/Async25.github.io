@@ -11,16 +11,16 @@ class ProjectsManager {
             },
             {
                 title: '简易自行瞄准装置（正在重制）',
-                description: '25电赛E题     MSSPM0 + STM32H7 + Jetson',
+                description: '25电赛E题     MSPM0 + STM32H7 + Jetson',
                 tech: ['C++/C', 'Kalman', 'ROS2'],
                 image: 'project2.jpg',
                 detail: '。'
             },
             {
-                title: 'RS485工业边缘网关',
+                title: '485转以太网工业边缘网关',
                 description: '企业项目',
                 tech: ['Python', 'FreeRTOS', 'MQTT'],
-                image: 'example.jpg',
+                image: 'project3.jpg',
                 detail: '。'
             },
             {
