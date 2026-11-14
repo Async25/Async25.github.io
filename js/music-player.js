@@ -67,7 +67,9 @@ class MusicPlayer {
             "DAMIDAMI(伴奏).m4a",
             "Sailing.m4a",
             "Sea of Clouds.m4a",
-            "You’re Not Supposed to Be Here.m4a"
+            "You’re Not Supposed to Be Here.m4a",
+            "乌云典当记.m4a",
+            "在这颗行星所有的酒馆.m4a"
         ];
 
         // Fisher-Yates: one new, non-repeating queue for each page load.
